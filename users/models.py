@@ -6,6 +6,8 @@ from users.constants import PROFILE_PICTURE
 
 # Create your models here.
 class User(AbstractUser):
+    """User model inherited from AbstractUser django's model"""
+
     mobile_number = models.IntegerField(null=True, blank=True)
     profile_picture = models.ImageField(upload_to=PROFILE_PICTURE)
 
