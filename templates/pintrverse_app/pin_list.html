@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% block content %}
+    <h1>All pins</h1>
+    <table class="table table-borderless">
+
+        <thead class="border-bottom font-weight-bold">
+        <tr>
+            <td>Pin id</td>
+            <td>Pin name</td>
+            <td>User</td>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for pin in object_list %}
+            <tr>
+                <td>{{ pin.id }}</td>
+                <td>{{ pin.title }}</td>
+                <td>{{ pin.user }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+{% endblock %}
