@@ -1,13 +1,9 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views import View
 from django.views.generic import CreateView, TemplateView, UpdateView
 
-from users import forms
 from users.forms import UserRegistrationForm
 from users.models import User
 
