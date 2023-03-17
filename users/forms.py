@@ -1,5 +1,6 @@
 from django import forms
 
+from users import constants
 from users.models import User
 from django.core.exceptions import ValidationError
 
@@ -17,5 +18,5 @@ class UserRegistrationForm(forms.ModelForm):
         password = cleaned_data.get('password')
         confirm_password = cleaned_data.get('confirm_password')
         if password != confirm_password:
-            raise ValidationError('Confirm password & Password must be same.')
+            raise ValidationError(constants.PWD_AND_CONFIRM_PWD_ERR)
 

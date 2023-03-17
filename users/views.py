@@ -20,6 +20,3 @@ class RegistrationView(CreateView):
 
 class HomeView(TemplateView):
     template_name = 'home.html'
-
-class LoginPageView(LoginView):
-    pass
