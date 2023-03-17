@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     # CUSTOM APPS FOR THIS PROJECT
     'users.apps.UsersConfig',
+    'pintrverse_app.apps.PintrverseAppConfig',
 
     # DJANGO TEMPLATE'S CRISPY FORMS
     'crispy_bootstrap4',

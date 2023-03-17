@@ -25,9 +25,38 @@
             <li class="nav-item">
                 <a class="nav-link" href="#">Contact</a>
             </li>
+
+            {% if request.user.is_authenticated == False %}
+                <li class="nav-item" style="float: right">
+                    <a class="nav-link" href={% url 'users:register' %}>Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'users:login' %}>Login</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#">hellu you are logged in</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'users:profile_edit' request.user.id%}>Update Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'users:logout' %}>Logout</a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 </nav>
+<div>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
 {% block content %}
 {% endblock %}
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
