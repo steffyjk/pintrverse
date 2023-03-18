@@ -20,3 +20,8 @@ class UserRegistrationForm(forms.ModelForm):
         if password != confirm_password:
             raise ValidationError(constants.PWD_AND_CONFIRM_PWD_ERR)
 
+    def save(self, commit=True):
+        user = super(UserRegistrationForm, self).save(commit=commit)
+        user.set_password(user.password)
+        user.save()
+        return user
