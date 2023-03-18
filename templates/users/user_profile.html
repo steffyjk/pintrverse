@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% block content %}
+    <div style="text-align: center" class="md-3">
+        {{ user.username }}
+    </div>
+    <div style="text-align: center">
+        {{ user.full_name }}
+    </div>
+    <div style="text-align: center">
+        {{ user.total_following }} followings
+    </div>
+    <div style="text-align: center; padding: 20px">
+        <a>
+            <button class="btn btn-primary" style="text-align: center">
+                Share
+            </button>
+        </a>
+        <a href="{% url 'users:profile_edit' request.user.id%}">
+            <button class="btn btn-primary" style="text-align: center">
+                Edit Profile
+            </button>
+        </a>
+    </div>
+    <div style="text-align: center; padding: 20px">
+        <a>
+            <button class="btn btn-primary" style="text-align: center">
+                Created
+            </button>
+        </a>
+        <a>
+            <button class="btn btn-primary" style="text-align: center">
+                Saved
+            </button>
+        </a>
+    </div>
+
+
+
+{% endblock %}

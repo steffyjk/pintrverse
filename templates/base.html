@@ -35,7 +35,7 @@
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="#">hellu you are logged in</a>
+                    <a class="nav-link" href="{% url 'users:profile' %}">Profile</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href={% url 'users:profile_edit' request.user.id%}>Update Profile</a>
