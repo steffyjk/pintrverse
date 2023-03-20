@@ -15,6 +15,7 @@
 
         <tbody>
         {% for pin in object_list %}
+            <a href={% url 'pintrverse:detail-pin' pin.id %}>
             <tr>
                 <td>{{ pin.id }}</td>
                 <td>{{ pin.title }}</td>
@@ -26,7 +27,7 @@
                         <p>No file uploaded.</p>
                     {% endif %}
                 {% endwith %}
-            </tr>
+            </tr></a>
         {% endfor %}
         </tbody>
 

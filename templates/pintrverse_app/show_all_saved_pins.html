@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% load static %}
+{% block content %}
+    <h1>This is all saved pins</h1>
+    <table class="table table-borderless">
+
+        <thead class="border-bottom font-weight-bold">
+        <tr>
+            <td>Pin id</td>
+            <td>Pin name</td>
+            <td>User</td>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for pin in object_list %}
+            <a href={% url 'pintrverse:detail-pin' pin.pin.id %}>
+                <tr>
+                    <td>{{ pin.pin.id }}</td>
+                    <td>{{ pin.pin.title }}</td>
+                    <td>{{ pin.user }}</td>
+                    {% with my_file=pin.pin.pin_file %}
+                        {% if my_file %}
+                            <img src="{{ my_file.url }}">
+                        {% else %}
+                            <p>No file uploaded.</p>
+                        {% endif %}
+                    {% endwith %}
+                </tr></a>
+        {% endfor %}
+        </tbody>
+
+    </table>
+{% endblock %}

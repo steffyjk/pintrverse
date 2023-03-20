@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import CreateView, TemplateView, UpdateView
 
+from pintrverse_app.models import SavedPin
 from users.forms import UserRegistrationForm
 from users.models import User
 
@@ -38,3 +39,8 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 class UserProfilePageView(generic.TemplateView):
     template_name = 'users/user_profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserProfilePageView, self).get_context_data(**kwargs)
+        context['saved_obj'] = SavedPin.objects.filter(user=self.request.user)
+        return context

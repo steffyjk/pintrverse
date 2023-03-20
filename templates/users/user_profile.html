@@ -22,19 +22,17 @@
             </button>
         </a>
     </div>
-    <div style="text-align: center; padding: 20px">
-        <a>
+
+    <div style="text-align: center">
+        <a href={% url 'pintrverse:create-pin' %}>
             <button class="btn btn-primary" style="text-align: center">
-                Created
+                Create Pin
             </button>
         </a>
-        <a>
+        <a href={% url 'pintrverse:show-all-saved-pins' %}>
             <button class="btn btn-primary" style="text-align: center">
-                Saved
+                Show all saved Pin
             </button>
         </a>
     </div>
-
-
-
 {% endblock %}
