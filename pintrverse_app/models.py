@@ -28,6 +28,17 @@ class Category(models.Model):
         return self.name
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=50, default=None, unique=True, null=False, blank=False)
+
+    class Meta:
+        verbose_name = 'Tag'
+        verbose_name_plural = 'Tags'
+
+    def __str__(self):
+        return self.name
+
+
 class Pin(CommonField):
     user = models.ForeignKey(verbose_name=_('User'), to=User, on_delete=models.CASCADE, related_name='pins')
     pin_file = models.FileField(verbose_name=_('Pin File'), upload_to=PIN_FILE)
@@ -36,6 +47,7 @@ class Pin(CommonField):
     alt_text = models.TextField(verbose_name=_('Alter Text'), blank=True, null=True)
     destination_link = models.URLField(verbose_name=_('Download from URL'), max_length=1000, null=True, blank=True)
     category = models.ForeignKey(verbose_name=_('Category'), to=Category, null=True, on_delete=models.SET_NULL)
+    tag = models.ManyToManyField(to=Tag, related_name='tags', verbose_name=_('Tag'))
 
     class Meta:
         verbose_name = 'Pin'
