@@ -20,10 +20,7 @@ def get_history_list(range_number):
 def extract_keywords(history_list):
     keyword_list = []
     for history in history_list:
-        # print("====", history[1])
         history = history[1]
-        # print(history)
-
         url = history
 
         parsed_url = urllib.parse.urlparse(url)
@@ -37,7 +34,7 @@ def extract_keywords(history_list):
             extracted = tldextract.extract(url)
             keywords = f"{extracted.domain}"
             keyword_list.append(keywords)
-    return keyword_list
+    return list(set(keyword_list))
 
 
 ans = extract_keywords(get_history_list(5))
