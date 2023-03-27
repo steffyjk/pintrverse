@@ -1,11 +1,13 @@
 import datetime
 
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
 
 from pintrverse_app.forms import CreatePinForm
-from pintrverse_app.models import Pin, SavedPin
+from pintrverse_app.models import Pin, SavedPin, Tag
+from pintrverse_app.utils import extract_keywords, get_history_list
 
 
 # Create your views here.
@@ -48,7 +50,6 @@ class SavePinView(generic.View):
 
 
 class ShowAllSavedPin(generic.ListView):
-
     model = SavedPin
     template_name = 'pintrverse_app/show_all_saved_pins.html'
 
@@ -57,3 +58,28 @@ class ShowAllSavedPin(generic.ListView):
         # Add custom filtering or ordering to the queryset
         queryset = queryset.filter(user_id=self.request.user.id)
         return queryset
+
+
+# FUNCTIONAL BASED FETCH PIN FROM USER's history's keyword
+def fetch_keyword_pin(request):
+    keywords = extract_keywords(get_history_list(5))
+    for keyword in keywords:
+        fetched_tag = Tag.objects.filter(name=str(keyword))
+        break
+    fetched_pin = Pin.objects.filter(tag__id__in=fetched_tag.all())
+    return HttpResponse(fetched_pin)
+
+
+class FetchKeyWordPin(generic.ListView):
+    model = Pin
+    template_name = 'pintrverse_app/fetched_pin.html'
+    keywords = extract_keywords(get_history_list(5))  # function for fetch history & filter keywords from that
+    ls = []
+    for keyword in keywords:
+        if fetched_tag := Tag.objects.filter(name=str(keyword)):  # find TAGS Based on keyword [ history ]
+            for i in fetched_tag.all():
+                queryset = Pin.objects.filter(tag=i.id)  # Find Pin based on Tag
+                ls.append(queryset)
+        queryset = []
+        for j in ls:
+            queryset += j
