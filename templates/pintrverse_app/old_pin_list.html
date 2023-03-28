@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="container">
+        {% for pin in object_list %}
+            <div class="window">
+                {% with my_file=pin.pin_file %}
+                    {% if my_file %}
+                        <img src="{{ my_file.url }}">
+                        <img class="foto" src="{{ my_file.url }}">
+                    {% else %}
+                        <p>No file uploaded.</p>
+                    {% endif %}
+                {% endwith %}
+                <p class="content">Follow me</p>
+
+            </div>
+        {% endfor %}
+        <div class="window">
+            <img class="foto" src="https://i.pinimg.com/736x/47/5e/ba/475eba57454015bfe214e8722e2422a1.jpg">
+            <p class="content">Follow me</p>
+            <img class="user" src="https://i.pinimg.com/236x/58/9c/8f/589c8ffa48aa58004b6221b60a15f05e.jpg">
+            <a class="username">bruhmomento</a>
+
+            <div class="hover-zone">
+                <div class="top-bar">
+                    <p>Profile ⌵</p>
+                    <a>Save</a>
+                </div>
+                <!-------------------->
+                <div class="bottom-bar">
+                    <a>↗ website.com</a>
+                    <div class="radius-ico">
+                        <img src="https://cdn3.iconfinder.com/data/icons/iconset-1-1/24/icon_set_outlinder-10-256.png">
+                        <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-more-256.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}
+
+{#{% extends 'base.html' %}#}
+{#{% load crispy_forms_filters %}#}
+{#{% block content %}#}
+{#    <h1>All pins</h1>#}
+{#    <table class="table table-borderless">#}
+{##}
+{#        <thead class="border-bottom font-weight-bold">#}
+{#        <tr>#}
+{#            <td>Pin id</td>#}
+{#            <td>Pin name</td>#}
+{#            <td>User</td>#}
+{#        </tr>#}
+{#        </thead>#}
+{##}
+{#        <tbody>#}
+{#        {% for pin in object_list %}#}
+{#            <a href={% url 'pintrverse:detail-pin' pin.id %}>#}
+{#            <tr>#}
+{#                <td>{{ pin.id }}</td>#}
+{#                <td>{{ pin.title }}</td>#}
+{#                <td>{{ pin.user }}</td>#}
+{#                {% with my_file=pin.pin_file %}#}
+{#                    {% if my_file %}#}
+{#                        <img src="{{ my_file.url }}">#}
+{#                    {% else %}#}
+{#                        <p>No file uploaded.</p>#}
+{#                    {% endif %}#}
+{#                {% endwith %}#}
+{#            </tr></a>#}
+{#        {% endfor %}#}
+{#        </tbody>#}
+{##}
+{#    </table>#}
+{#{% endblock %}#}
