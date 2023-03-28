@@ -21,8 +21,9 @@ from django.conf import settings
 from users.views import HomeView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', HomeView.as_view(), name='home'),
-    path('users/', include('users.urls', namespace='users'),),
-    path('pintrverse/', include('pintrverse_app.urls', namespace='pintrverse'),),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path('admin/', admin.site.urls),
+                  path('', HomeView.as_view(), name='home'),
+                  path('users/', include('users.urls', namespace='users'), ),
+                  path('pintrverse/', include('pintrverse_app.urls', namespace='pintrverse'), ),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL,
+                                                                                         document_root=settings.STATIC_ROOT)
