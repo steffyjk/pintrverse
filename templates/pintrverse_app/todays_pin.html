@@ -1,35 +1,43 @@
 {% extends 'base.html' %}
-{% load crispy_forms_filters %}
-{% load static %}
 {% block content %}
-    <h1>All pins</h1>
-    <table class="table table-borderless">
 
-        <thead class="border-bottom font-weight-bold">
-        <tr>
-            <td>Pin id</td>
-            <td>Pin name</td>
-            <td>User</td>
-        </tr>
-        </thead>
-
-        <tbody>
+    <div class="container">
         {% for pin in object_list %}
-            <a href={% url 'pintrverse:detail-pin' pin.id %}>
-            <tr>
-                <td>{{ pin.id }}</td>
-                <td>{{ pin.title }}</td>
-                <td>{{ pin.user }}</td>
+
+            <div class="window">
                 {% with my_file=pin.pin_file %}
                     {% if my_file %}
-                        <img src="{{ my_file.url }}">
+                        <a href={% url 'pintrverse:detail-pin' pin.id %}>
+                            <img class="foto" src="{{ my_file.url }}"></a>
                     {% else %}
                         <p>No file uploaded.</p>
                     {% endif %}
                 {% endwith %}
-            </tr></a>
-        {% endfor %}
-        </tbody>
+                <p class="content">{{ pin.title }}</p>
+                <img class="user" src="https://i.pinimg.com/236x/58/9c/8f/589c8ffa48aa58004b6221b60a15f05e.jpg">
+                <a class="username">{{ pin.user.username }}</a>
 
-    </table>
+                <div class="hover-zone">
+                    <div class="top-bar">
+                        <p>Profile ⌵</p>
+                        <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:save-pin' pin.id %}>
+                            {% csrf_token %}
+                            <a><input type="submit" value="Save"></a>
+                        </form>
+                    </div>
+                    <!-------------------->
+                    <div class="bottom-bar">
+                        <a href="{{ pin.destination_link }}">↗ website.com</a>
+                        <div class="radius-ico">
+                            <img src="https://cdn3.iconfinder.com/data/icons/iconset-1-1/24/icon_set_outlinder-10-256.png">
+                            <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-more-256.png">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
+
+
