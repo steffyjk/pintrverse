@@ -1,8 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views import generic
+from django.views import generic, View
 from django.views.generic import CreateView, TemplateView, UpdateView
 
 from pintrverse_app.models import SavedPin
@@ -44,3 +44,35 @@ class UserProfilePageView(generic.TemplateView):
         context = super(UserProfilePageView, self).get_context_data(**kwargs)
         context['saved_obj'] = SavedPin.objects.filter(user=self.request.user)
         return context
+
+
+class OtherUserProfile(generic.TemplateView):
+    template_name = 'users/other_user_profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OtherUserProfile, self).get_context_data(**kwargs)
+        context['user'] = User.objects.get(id=kwargs['pk'])
+        return context
+
+
+class FollowUserView(View):
+    success_message = "Successfully followed"
+
+    def get(self, request, user):
+        user1 = User.objects.filter(id=request.user.id).first()
+        user2 = User.objects.filter(username=user).first()
+        user1.following.add(user2.id)
+        return redirect(to='home')
+
+
+class UserFollowingList(generic.ListView):
+    model = User
+    template_name = 'users/user_following_list.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # Add custom filtering or ordering to the queryset
+        user = self.request.user
+        print(f"--> this is user", user)
+        queryset = user.following.all()
+        return queryset

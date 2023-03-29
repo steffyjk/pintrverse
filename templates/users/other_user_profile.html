@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% block extra_css %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+{% endblock %}
+{% block content %}
+    <div style="text-align: center" class="md-3">
+        {{ user}}
+    </div>
+    <div style="text-align: center">
+        {{ user.full_name }}
+    </div>
+    <div style="text-align: center">
+        {{ user.total_following }} followings
+    </div>
+    {% if request.user != user %}
+    <div style="text-align: center; padding: 20px">
+        <a href="{% url 'users:follow-user' user %}">
+            <button class="btn btn-primary" style="text-align: center">
+                FOLLOW
+            </button>
+        </a>
+    </div>
+    {% endif %}
+{% endblock %}
