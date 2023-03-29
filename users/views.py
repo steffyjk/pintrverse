@@ -77,8 +77,16 @@ class UserFollowingList(generic.ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        # Add custom filtering or ordering to the queryset
         user = self.request.user
-        print(f"--> this is user", user)
         queryset = user.following.all()
         return queryset
+
+
+class UnfollowUserView(View):
+    success_message = "Successfully Unfollowed"
+
+    def get(self, request, user):
+        user1 = User.objects.filter(id=request.user.id).first()
+        user2 = User.objects.filter(username=user).first()
+        user1.following.remove(user2.id)
+        return redirect(to='home')
