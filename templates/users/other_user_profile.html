@@ -14,12 +14,23 @@
         {{ user.total_following }} followings
     </div>
     {% if request.user != user %}
-    <div style="text-align: center; padding: 20px">
-        <a href="{% url 'users:follow-user' user %}">
-            <button class="btn btn-primary" style="text-align: center">
-                FOLLOW
-            </button>
-        </a>
-    </div>
+        {% if follow == 'no' %}
+            <div style="text-align: center; padding: 20px">
+                <a href="{% url 'users:follow-user' user %}">
+                    <button class="btn btn-primary" style="text-align: center">
+                        FOLLOW
+                    </button>
+                </a>
+            </div>
+        {% endif %}
+        {% if follow == 'yes' %}
+            <div style="text-align: center; padding: 20px">
+                <a href="{% url 'users:unfollow-user' user %}">
+                    <button class="btn btn-primary" style="text-align: center">
+                        Unfollow
+                    </button>
+                </a>
+            </div>
+        {% endif %}
     {% endif %}
 {% endblock %}

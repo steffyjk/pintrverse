@@ -52,6 +52,12 @@ class OtherUserProfile(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super(OtherUserProfile, self).get_context_data(**kwargs)
         context['user'] = User.objects.get(id=kwargs['pk'])
+        login_user = self.request.user
+        other_user = User.objects.get(id=kwargs['pk'])
+        if other_user in login_user.following.all():
+            context['follow'] = 'yes'
+        else:
+            context['follow'] = 'no'
         return context
 
 
