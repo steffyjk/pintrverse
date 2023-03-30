@@ -19,7 +19,7 @@
 
                 <div class="hover-zone">
                     <div class="top-bar">
-                        <p>Profile ⌵</p>
+                        <a href={% url 'users:other-user-profile' pin.user.id %}>   Profile ⌵</a>
                         <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:save-pin' pin.id %}>
                             {% csrf_token %}
                             <a><input type="submit" value="Save"></a>
