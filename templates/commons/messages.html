@@ -1,0 +1,16 @@
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert prompts text-md {{message.tags}} fade show" role="alert">
+        {% if message.tags == 'alert-danger' %}
+        <i class="icon fas fa-ban"></i> {{message}}
+        {% elif message.tags == 'alert-info' %}
+        <i class="icon fas fa-info"></i> {{message}}
+        {% elif message.tags == 'alert-warning' %}
+        <i class="icon fas fa-exclamation-triangle"></i> {{message}}
+        {% elif message.tags == 'alert-success' %}
+        <i class="icon fas fa-check"></i> {{message}}
+        {% endif %}
+    </div>
+    {% endfor %}
+{% endif %}
+

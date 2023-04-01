@@ -2,11 +2,13 @@ import datetime
 
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
+from django.contrib import messages
+from rest_framework.response import Response
 
 from pintrverse_app.forms import CreatePinForm
-from pintrverse_app.models import Pin, SavedPin, Tag
+from pintrverse_app.models import Pin, SavedPin, Tag, Like
 from pintrverse_app.utils import extract_keywords, get_history_list
 
 
@@ -14,6 +16,37 @@ from pintrverse_app.utils import extract_keywords, get_history_list
 class ListAllPins(generic.ListView):
     model = Pin
     template_name = 'pintrverse_app/pin_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ListAllPins, self).get_context_data(**kwargs)
+        for j in context:
+            print(j)
+        pins = Pin.objects.all()
+        pins_saved = []
+        pins_liked = []
+        for pin in pins:
+            try:
+                saved = SavedPin.objects.get(user=self.request.user,pin=pin)
+                pins_saved.append(saved.pin.id)
+            except SavedPin.DoesNotExist:
+                pass
+            try:
+                liked = Like.objects.get(user=self.request.user,pin=pin)
+                pins_liked.append(liked.pin.id)
+            except Like.DoesNotExist:
+                pass
+        context['saved_pins'] = pins_saved
+        context['liked_pins'] = pins_liked
+        login_user = self.request.user
+        # for pin in self.object_list:
+        #     save_pin = SavedPin.objects.filter(user=login_user,
+        #                                        pin=pin.id)
+        #     # if save_pin:
+        #     #     context["is_saved"] = True
+        #     # else:
+        #     context[","] = False
+        # print(f"----This is context: {context}")
+        return context
 
 
 class CreatePinView(generic.CreateView):
@@ -43,10 +76,76 @@ class ParticularPinDetail(generic.DetailView):
 class SavePinView(generic.View):
 
     def post(self, request, *args, **kwargs):
-        pin_id = kwargs['pk']
-        save_p = SavedPin.objects.create(user_id=request.user.id,
-                                         pin_id=pin_id)
+        if SavedPin.objects.filter(pin__id=kwargs['pk'], user=self.request.user).exists():
+            messages.warning(self.request, 'Already saved')
+            return redirect(to='home')
+        else:
+            pin_id = kwargs['pk']
+            try:
+                save_p = SavedPin.objects.create(user_id=request.user.id,
+                                                 pin_id=pin_id)
+                messages.success(self.request, 'Saved successfully')
+            except Exception as e:
+                messages.error(self.request, f"{e}")
+                return redirect(to='home')
+            return redirect(to='home')
+
+
+class UnSavePinView(generic.View):
+
+    def post(self, request, *args, **kwargs):
+        try:
+            saved_pin = SavedPin.objects.get(pin__id=kwargs['pk'], user=self.request.user)
+            saved_pin.delete()
+            messages.success(self.request, 'Unsaved Pin')
+        except SavedPin.DoesNotExist:
+            messages.error(self.request, "Pin Not Saved Please Save It First !")
         return redirect(to='home')
+
+
+class LikeView(generic.View):
+
+    def post(self, request, *args, **kwargs):
+        if Like.objects.filter(pin__id=kwargs['pk'], user=self.request.user).exists():
+            messages.warning(self.request, 'Already Liked')
+            return redirect(to='home')
+        else:
+            pin_id = kwargs['pk']
+            try:
+                save_p = Like.objects.create(user_id=request.user.id,
+                                             pin_id=pin_id)
+                messages.success(self.request, 'Liked successfully')
+            except Exception as e:
+                messages.error(self.request, f"{e}")
+                return redirect(to='home')
+            return redirect(to='home')
+
+
+class UnlikeView(generic.View):
+
+    def post(self, request, *args, **kwargs):
+        try:
+            saved_pin = Like.objects.get(pin__id=kwargs['pk'], user=self.request.user)
+            saved_pin.delete()
+            messages.success(self.request, 'Unliked Pin')
+        except Like.DoesNotExist:
+            messages.error(self.request, "Pin Not Liked Please Save It First !")
+        return redirect(to='home')
+
+
+from rest_framework.generics import GenericAPIView
+
+
+class RestApiForSave(GenericAPIView):
+
+    def get(self, request, *args, **kwargs):
+        req = self.request
+        post_id = req.GET.get('post_id')
+        user_id = req.GET.get('user_id')
+        if SavedPin.objects.filter(pin__id=post_id, user=user_id).exists():
+            return Response({'status': 'exists'})
+        else:
+            return Response({'status': 'not_exists'})
 
 
 class ShowAllSavedPin(generic.ListView):
@@ -83,3 +182,14 @@ class FetchKeyWordPin(generic.ListView):
         queryset = []
         for j in ls:
             queryset += j
+
+
+class LikeUnlikePin(generic.View):
+    def get(self, request, pin_id):
+        pin_obj = Pin.objects.get(id=pin_id)
+        if pin_obj.pin_likes and pin_obj.pin_likes.filter(user=request.user.id).exists():
+            pin_obj.pin_likes.delete(request.user)
+        else:
+            print('-->p')
+            pin_obj.pin_likes.add(request.user)
+        return redirect(reverse('detail_pin', kwargs={'id': pin_id}))
