@@ -22,30 +22,31 @@ class ListAllPins(generic.ListView):
         for j in context:
             print(j)
         pins = Pin.objects.all()
-        pins_saved = []
-        pins_liked = []
-        for pin in pins:
-            try:
-                saved = SavedPin.objects.get(user=self.request.user,pin=pin)
-                pins_saved.append(saved.pin.id)
-            except SavedPin.DoesNotExist:
-                pass
-            try:
-                liked = Like.objects.get(user=self.request.user,pin=pin)
-                pins_liked.append(liked.pin.id)
-            except Like.DoesNotExist:
-                pass
-        context['saved_pins'] = pins_saved
-        context['liked_pins'] = pins_liked
-        login_user = self.request.user
-        # for pin in self.object_list:
-        #     save_pin = SavedPin.objects.filter(user=login_user,
-        #                                        pin=pin.id)
-        #     # if save_pin:
-        #     #     context["is_saved"] = True
-        #     # else:
-        #     context[","] = False
-        # print(f"----This is context: {context}")
+        if self.request.user.is_authenticated:
+            pins_saved = []
+            pins_liked = []
+            for pin in pins:
+                try:
+                    saved = SavedPin.objects.get(user=self.request.user,pin=pin)
+                    pins_saved.append(saved.pin.id)
+                except SavedPin.DoesNotExist:
+                    pass
+                try:
+                    liked = Like.objects.get(user=self.request.user,pin=pin)
+                    pins_liked.append(liked.pin.id)
+                except Like.DoesNotExist:
+                    pass
+            context['saved_pins'] = pins_saved
+            context['liked_pins'] = pins_liked
+        # login_user = self.request.user
+        # # for pin in self.object_list:
+        # #     save_pin = SavedPin.objects.filter(user=login_user,
+        # #                                        pin=pin.id)
+        # #     # if save_pin:
+        # #     #     context["is_saved"] = True
+        # #     # else:
+        # #     context[","] = False
+        # # print(f"----This is context: {context}")
         return context
 
 
