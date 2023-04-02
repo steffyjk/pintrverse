@@ -34,7 +34,7 @@ class ListAllPins(generic.ListView):
                 except SavedPin.DoesNotExist:
                     pass
                 try:
-                    liked = Like.objects.get(user=self.request.user,pin=pin)
+                    liked = Like.objects.get(user=self.request.user, pin=pin)
                     pins_liked.append(liked.pin.id)
                 except Like.DoesNotExist:
                     pass
