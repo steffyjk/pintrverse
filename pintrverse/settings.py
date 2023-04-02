@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     # DJANGO TEMPLATE'S CRISPY FORMS
     'crispy_bootstrap4',
     'crispy_forms',
+
+    # API
+    'rest_framework',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
