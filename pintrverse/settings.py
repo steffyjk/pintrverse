@@ -50,6 +50,9 @@ INSTALLED_APPS = [
 
     # API
     'rest_framework',
+
+    # Form Widget Tweaks
+    'widget_tweaks'
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
