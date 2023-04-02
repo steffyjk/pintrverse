@@ -1,15 +1,17 @@
 import datetime
 
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.contrib import messages
 from rest_framework.response import Response
 
+from pintrverse_app.filters import UserFilterSet, PinFilterSet
 from pintrverse_app.forms import CreatePinForm
 from pintrverse_app.models import Pin, SavedPin, Tag, Like
 from pintrverse_app.utils import extract_keywords, get_history_list
+from users.models import User
 
 
 # Create your views here.
@@ -27,7 +29,7 @@ class ListAllPins(generic.ListView):
             pins_liked = []
             for pin in pins:
                 try:
-                    saved = SavedPin.objects.get(user=self.request.user,pin=pin)
+                    saved = SavedPin.objects.get(user=self.request.user, pin=pin)
                     pins_saved.append(saved.pin.id)
                 except SavedPin.DoesNotExist:
                     pass
@@ -194,3 +196,25 @@ class LikeUnlikePin(generic.View):
             print('-->p')
             pin_obj.pin_likes.add(request.user)
         return redirect(reverse('detail_pin', kwargs={'id': pin_id}))
+
+
+def search_users(request):
+    users = User.objects.all()
+    filter = UserFilterSet(request.GET, queryset=users)
+    users = filter.qs
+    context = {
+        'users': users,
+        'filter': filter
+    }
+    return render(request, 'pintrverse_app/search_users.html', context)
+
+
+def search_pins(request):
+    pins = Pin.objects.all()
+    filter = PinFilterSet(request.GET, queryset=pins)
+    pins = filter.qs
+    context = {
+        'pins': pins,
+        'filter': filter
+    }
+    return render(request, 'pintrverse_app/search_pins.html', context)

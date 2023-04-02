@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block extra_css %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <form class="d-flex" method="get">
+            {% for field in filter.form %}
+                {% render_field field class+="form-control mr-2" placeholder="Search Username" %}
+            {% endfor %}
+            <button type="submit" class="btn btn-dark"><i class="bi bi-search"></i></button>
+        </form>
+        <div class="container text-center">
+            <ul class="list-group">
+
+                {% for user in users %}
+                    <a class="text-decoration-none" href="{% url 'users:other-user-profile' user.id %}"><li class="list-group-item">{{user.username}}</li></a>
+                {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+{% endblock %}
