@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from pintrverse_app.filters import UserFilterSet, PinFilterSet
 from pintrverse_app.forms import CreatePinForm
 from pintrverse_app.models import Pin, SavedPin, Tag, Like
-from pintrverse_app.utils import extract_keywords, get_history_list
+# from pintrverse_app.utils import extract_keywords, get_history_list
 from users.models import User
 
 
