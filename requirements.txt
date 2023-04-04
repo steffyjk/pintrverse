@@ -1,5 +1,4 @@
 asgiref==3.6.0
-backports.zoneinfo<=0.2.1
 beautifulsoup4==4.12.0
 browser-cookie3==0.17.1
 browser-history==0.3.2
@@ -42,3 +41,4 @@ sqlparse==0.4.3
 tldextract==3.4.0
 urllib3==1.26.15
 zipp==3.15.0
+backports.zoneinfo==0.2.1
