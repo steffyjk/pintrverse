@@ -1,5 +1,5 @@
 asgiref==3.6.0
-backports.zoneinfo==0.2.1
+backports.zoneinfo<=0.2.1
 beautifulsoup4==4.12.0
 browser-cookie3==0.17.1
 browser-history==0.3.2
