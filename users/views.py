@@ -8,6 +8,16 @@ from django.views.generic import CreateView, TemplateView, UpdateView
 from pintrverse_app.models import SavedPin, Pin
 from users.forms import UserRegistrationForm
 from users.models import User
+from django.shortcuts import render, redirect
+from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from .forms import CustomPasswordResetForm
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from .forms import CustomSetPasswordForm
+from django.contrib.auth import get_user_model, login
 
 
 # Create your views here.
@@ -94,3 +104,56 @@ class UnfollowUserView(View):
         user2 = User.objects.filter(username=user).first()
         user1.following.remove(user2.id)
         return redirect(reverse_lazy('home'))
+
+
+User = get_user_model()
+
+
+def ResetPassword(request):
+    if request.method == 'POST':
+        form = CustomPasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                user = None
+            if user:
+                # Generate a token for the user
+                token_generator = default_token_generator
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                token = token_generator.make_token(user)
+
+                # Build the password reset URL and send it to the user's email
+                reset_url = request.build_absolute_uri(f"/users/reset-password/{uid}/{token}/")
+                send_mail(
+                    'Password Reset',
+                    f'Here is the link to reset your password: {reset_url}',
+                    'from@example.com',
+                    [email],
+                    fail_silently=False,
+                )
+                return render(request, 'users/reset_password_done.html')
+    else:
+        form = CustomPasswordResetForm()
+    return render(request, 'users/reset_password.html', {'form': form})
+
+
+def reset_password_confirm(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            form = CustomSetPasswordForm(user=user, data=request.POST)
+            if form.is_valid():
+                form.save()
+                login(request, user)
+                return redirect('home')
+        else:
+            form = CustomSetPasswordForm(user=user)
+        return render(request, 'users/reset_password_confirm.html', {'form': form})
+    else:
+        return render(request, 'users/reset_password_invalid.html')

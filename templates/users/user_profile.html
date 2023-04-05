@@ -16,12 +16,11 @@
                 {{ user.total_following }} followings
             </button>
         </a>
-
     </div>
     <div style="text-align: center; padding: 20px">
-        <a>
+        <a href={% url 'users:reset_password' %}>
             <button class="btn btn-primary" style="text-align: center">
-                Share
+                Reset Password
             </button>
         </a>
         <a href="{% url 'users:profile_edit' request.user.id%}">
