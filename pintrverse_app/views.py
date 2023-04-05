@@ -60,6 +60,7 @@ class CreatePinView(generic.CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        messages.success(self.request, 'Your new pin created.')
         return super(CreatePinView, self).form_valid(form)
 
 
@@ -217,7 +218,6 @@ class LikeUnlikePin(generic.View):
         if pin_obj.pin_likes and pin_obj.pin_likes.filter(user=request.user.id).exists():
             pin_obj.pin_likes.delete(request.user)
         else:
-            print('-->p')
             pin_obj.pin_likes.add(request.user)
         return redirect(reverse('detail_pin', kwargs={'id': pin_id}))
 
