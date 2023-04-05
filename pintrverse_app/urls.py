@@ -2,7 +2,7 @@ from django.urls import path
 
 from pintrverse_app.views import ListAllPins, CreatePinView, TodayPinView, ParticularPinDetail, SavePinView, \
     LikeUnlikePin, RestApiForSave, UnSavePinView, LikeView, \
-    UnlikeView, search_users, search_pins, ShowAllSavedPin
+    UnlikeView, search_users, search_pins, ShowAllSavedPin,DeletePinView,UpdatePin
 
 app_name = 'pintrverse'
 urlpatterns = [
@@ -20,6 +20,8 @@ urlpatterns = [
     path('unsave-pin/<int:pk>', UnSavePinView.as_view(), name='unsave-pin'),
     path('like-pin/<int:pk>', LikeView.as_view(), name='like-pin'),
     path('unlike-pin/<int:pk>', UnlikeView.as_view(), name='unlike-pin'),
+    path('delete-pin/<int:pk>', DeletePinView.as_view(), name='delete-pin'),
+    path('update-pin/<int:pk>', UpdatePin.as_view(), name='update-pin'),
     # REST API
     path('rest-api/', RestApiForSave.as_view(), name='rest-api'),
 

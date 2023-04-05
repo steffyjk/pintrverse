@@ -251,3 +251,16 @@ def search_pins(request):
         'filter': filter
     }
     return render(request, 'pintrverse_app/search_pins.html', context)
+
+
+class UpdatePin(generic.UpdateView):
+    model = Pin
+    fields = ['pin_file', 'title', 'about', 'alt_text', 'destination_link', 'category', 'tag']
+    template_name = 'pintrverse_app/pin_update.html'
+    success_url = reverse_lazy('home')
+
+
+class DeletePinView(generic.DeleteView):
+    model = Pin
+    template_name = 'pintrverse_app/confirm_pin_delete.html'
+    success_url = reverse_lazy('home')

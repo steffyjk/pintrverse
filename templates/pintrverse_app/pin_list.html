@@ -46,17 +46,23 @@
                                 {% if pin.id in liked_pins %}
                                     <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:unlike-pin' pin.id %}>
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-dark rounded-pill"><i class="bi bi-hand-thumbs-down"></i></submit>
+                                        <button type="submit" class="btn btn-dark rounded-pill"><i class="bi bi-hand-thumbs-down"></i></button>
                                     </form>
                                 {% else %}
                                     <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:like-pin' pin.id %}>
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-dark rounded-pill"><i class="bi bi-hand-thumbs-up"></i></submit>
+                                        <button type="submit" class="btn btn-dark rounded-pill"><i class="bi bi-hand-thumbs-up"></i></button>
                                     </form>
                                 {% endif %}
+                                {% if pin.user.id == request.user.id %}
+                                    <a href="{% url 'pintrverse:delete-pin' pk=pin.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
+                                    <a href="{% url 'pintrverse:update-pin' pk=pin.id %}" class="btn btn-danger"><i class="bi bi-pencil-square"></i></a>
+                                {% endif %}
                             {% endif %}
+                            
+                                
                             <!-- <img src="https://cdn3.iconfinder.com/data/icons/iconset-1-1/24/icon_set_outlinder-10-256.png"> -->
-                            <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-more-256.png">
+                            <!-- <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-more-256.png"> -->
                         </div>
                     </div>
                 </div>
