@@ -2,7 +2,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 
 from users.views import RegistrationView, HomeView, UserProfileUpdateView, UserProfilePageView, OtherUserProfile, \
-    FollowUserView, UserFollowingList, UnfollowUserView
+    FollowUserView, UserFollowingList, UnfollowUserView,ResetPassword,reset_password_confirm
 
 app_name = 'users'
 urlpatterns = [
@@ -19,4 +19,8 @@ urlpatterns = [
     path('follow-user/<str:user>/', FollowUserView.as_view(), name='follow-user'),
     path('unfollow-user/<str:user>/', UnfollowUserView.as_view(), name='unfollow-user'),
     path('following-list/', UserFollowingList.as_view(), name='following-list'),
+    
+
+    path('reset-password/', ResetPassword, name='reset_password'),
+    path('reset-password/<uidb64>/<token>/', reset_password_confirm, name='password_reset_confirm'),
 ]

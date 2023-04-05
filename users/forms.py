@@ -3,7 +3,7 @@ from django import forms
 from users import constants
 from users.models import User
 from django.core.exceptions import ValidationError
-
+from django.contrib.auth.forms import PasswordResetForm,SetPasswordForm
 
 class UserRegistrationForm(forms.ModelForm):
     confirm_password = forms.CharField(max_length=128)
@@ -25,3 +25,15 @@ class UserRegistrationForm(forms.ModelForm):
         user.set_password(user.password)
         user.save()
         return user
+
+class CustomPasswordResetForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # customize the form fields here, if needed
+
+
+class CustomSetPasswordForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # customize the form fields here, if needed
+
