@@ -12,7 +12,7 @@ urlpatterns = [
         template_name='users/login.html',
         redirect_authenticated_user=True),
          name='login'),
-    path('logout/', LogoutView.as_view(next_page='/users/home/'), name='logout'),
+    path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
     path('edit-profile/<int:pk>/', UserProfileUpdateView.as_view(), name='profile_edit'),
     path('profile/', UserProfilePageView.as_view(), name='profile'),
     path('other-user-profile/<int:pk>/', OtherUserProfile.as_view(), name='other-user-profile'),

@@ -72,7 +72,7 @@ class FollowUserView(View):
         user1 = User.objects.filter(id=request.user.id).first()
         user2 = User.objects.filter(username=user).first()
         user1.following.add(user2.id)
-        return redirect(to='home')
+        return redirect(reverse_lazy('home'))
 
 
 class UserFollowingList(generic.ListView):
@@ -93,4 +93,4 @@ class UnfollowUserView(View):
         user1 = User.objects.filter(id=request.user.id).first()
         user2 = User.objects.filter(username=user).first()
         user1.following.remove(user2.id)
-        return redirect(to='home')
+        return redirect(reverse_lazy('home'))
