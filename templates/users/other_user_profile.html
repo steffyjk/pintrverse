@@ -24,6 +24,7 @@
                         </button>
                     </a>
                 </div>
+                <p>This account is private kindly follow them to see thier pins</p>
             {% endif %}
             {% if follow == 'yes' %}
                 <div style="text-align: center; padding: 20px">
@@ -33,6 +34,67 @@
                         </button>
                     </a>
                 </div>
+                <hr>
+                <div class="container">
+                    {% for pin in data %}
+
+                        <div class="window">
+                            {% with my_file=pin.pin_file %}
+                                {% if my_file %}
+                                    <a href={% url 'pintrverse:detail-pin' pin.id %}>
+                                        <img class="foto" src="{{ my_file.url }}"></a>
+                                {% else %}
+                                    <p>No file uploaded.</p>
+                                {% endif %}
+                            {% endwith %}
+                            <p class="content">{{ pin.title }}</p>
+                            <img class="user" src="https://i.pinimg.com/236x/58/9c/8f/589c8ffa48aa58004b6221b60a15f05e.jpg">
+                            <a class="username">{{ pin.user.username }}</a>
+
+                            <div class="hover-zone">
+                                <div class="top-bar">
+                                    <a href={% url 'users:other-user-profile' pin.user.id %}>   Profile ⌵</a>
+                                    {% if request.user.is_authenticated %}
+                                        {% if pin.id in saved_pins %}
+                                            <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:unsave-pin' pin.id %}>
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-dark rounded-pill">Unsave</submit>
+                                            </form>
+                                        {% else %}
+                                            <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:save-pin' pin.id %}>
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-primary rounded-pill">Save</button>
+                                            </form>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                                <!-------------------->
+                                <div class="bottom-bar">
+                                    <a href="{{ pin.destination_link }}">↗ website.com</a>
+                                    <div class="radius-ico">
+                                        {% if request.user.is_authenticated %}
+                                            {% if pin.id in liked_pins %}
+                                                <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:unlike-pin' pin.id %}>
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-dark rounded-pill"><i class="bi bi-hand-thumbs-down"></i></submit>
+                                                </form>
+                                            {% else %}
+                                                <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:like-pin' pin.id %}>
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-dark rounded-pill"><i class="bi bi-hand-thumbs-up"></i></submit>
+                                                </form>
+                                            {% endif %}
+                                        {% endif %}
+                                        <!-- <img src="https://cdn3.iconfinder.com/data/icons/iconset-1-1/24/icon_set_outlinder-10-256.png"> -->
+                                        <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-more-256.png">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    {% endfor %}
+                </div>
+
             {% endif %}
         {% endif %}
     {% endif %}

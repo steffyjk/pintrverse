@@ -57,10 +57,11 @@ class OtherUserProfile(generic.TemplateView):
             other_user = User.objects.get(id=kwargs['pk'])
             if other_user in login_user.following.all():
                 context['follow'] = 'yes'
+                pins = Pin.objects.filter(user_id=other_user.id).all()
+                context['data'] = pins
             else:
                 context['follow'] = 'no'
-        # else:
-        #     context['follow'] = 'yes'
+
         return context
 
 
