@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 from pintrverse_app.filters import UserFilterSet, PinFilterSet
 from pintrverse_app.forms import CreatePinForm
-from pintrverse_app.models import Pin, SavedPin, Tag, Like,Category
+from pintrverse_app.models import Pin, SavedPin, Tag, Like, Category
 # from pintrverse_app.utils import extract_keywords, get_history_list
 from users.models import User
 
@@ -62,16 +62,17 @@ class CreatePinView(generic.CreateView):
         form.instance.user = self.request.user
         messages.success(self.request, 'Your new pin created.')
         return super(CreatePinView, self).form_valid(form)
-    
-    def post(self,request, *args, **kwargs):
+
+    def post(self, request, *args, **kwargs):
         if 'categorybtn' in request.POST:
             category = request.POST.get('category_name')
             try:
                 category = Category.objects.create(name=category)
-                messages.success(request,"Category Created !")
+                messages.success(request, "Category Created !")
             except:
-                messages.error(request,"Something Went Wrong Creating Category !")
+                messages.error(request, "Something Went Wrong Creating Category !")
         return super().post(request, *args, **kwargs)
+
 
 class TodayPinView(generic.ListView):
     model = Pin
