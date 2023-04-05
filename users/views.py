@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views import generic, View
 from django.views.generic import CreateView, TemplateView, UpdateView
 
-from pintrverse_app.models import SavedPin
+from pintrverse_app.models import SavedPin, Pin
 from users.forms import UserRegistrationForm
 from users.models import User
 
