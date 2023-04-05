@@ -68,6 +68,29 @@ class TodayPinView(generic.ListView):
     template_name = 'pintrverse_app/todays_pin.html'
     queryset = Pin.objects.filter(created_at__date=datetime.date.today())
 
+    def get_context_data(self, **kwargs):
+        context = super(TodayPinView, self).get_context_data(**kwargs)
+        for j in context:
+            print(j)
+        pins = Pin.objects.all()
+        if self.request.user.is_authenticated:
+            pins_saved = []
+            pins_liked = []
+            for pin in pins:
+                try:
+                    saved = SavedPin.objects.get(user=self.request.user, pin=pin)
+                    pins_saved.append(saved.pin.id)
+                except SavedPin.DoesNotExist:
+                    pass
+                try:
+                    liked = Like.objects.get(user=self.request.user, pin=pin)
+                    pins_liked.append(liked.pin.id)
+                except Like.DoesNotExist:
+                    pass
+            context['saved_pins'] = pins_saved
+            context['liked_pins'] = pins_liked
+        return context
+
 
 class ParticularPinDetail(generic.DetailView):
     model = Pin
@@ -160,6 +183,7 @@ class ShowAllSavedPin(generic.ListView):
         # Add custom filtering or ordering to the queryset
         queryset = queryset.filter(user_id=self.request.user.id)
         return queryset
+
 
 #
 # # FUNCTIONAL BASED FETCH PIN FROM USER's history's keyword

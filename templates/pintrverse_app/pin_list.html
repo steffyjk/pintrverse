@@ -24,10 +24,6 @@
                 <div class="hover-zone">
                     <div class="top-bar">
                         <a href={% url 'users:other-user-profile' pin.user.id %}>   Profile ⌵</a>
-                        {% comment %} {% if pin.title %}
-                            <h1>Hello i'm saved</h1>
-                        {% endif %} {% endcomment %}
-
                         {% if request.user.is_authenticated %}
                             {% if pin.id in saved_pins %}
                                 <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:unsave-pin' pin.id %}>

@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
+{% block extra_css %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+{% endblock %}
 {% block content %}
-
+    {% include 'commons/messages.html' %}
     <div class="container">
         {% for pin in object_list %}
 
@@ -19,17 +23,39 @@
 
                 <div class="hover-zone">
                     <div class="top-bar">
-                        <p>Profile ⌵</p>
-                        <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:save-pin' pin.id %}>
-                            {% csrf_token %}
-                            <a><input type="submit" value="Save"></a>
-                        </form>
+                        <a href={% url 'users:other-user-profile' pin.user.id %}>   Profile ⌵</a>
+                        {% if request.user.is_authenticated %}
+                            {% if pin.id in saved_pins %}
+                                <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:unsave-pin' pin.id %}>
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-dark rounded-pill">Unsave</submit>
+                                </form>
+                            {% else %}
+                                <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:save-pin' pin.id %}>
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary rounded-pill">Save</button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
                     </div>
                     <!-------------------->
                     <div class="bottom-bar">
                         <a href="{{ pin.destination_link }}">↗ website.com</a>
                         <div class="radius-ico">
-                            <img src="https://cdn3.iconfinder.com/data/icons/iconset-1-1/24/icon_set_outlinder-10-256.png">
+                            {% if request.user.is_authenticated %}
+                                {% if pin.id in liked_pins %}
+                                    <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:unlike-pin' pin.id %}>
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-dark rounded-pill"><i class="bi bi-hand-thumbs-down"></i></submit>
+                                    </form>
+                                {% else %}
+                                    <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:like-pin' pin.id %}>
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-dark rounded-pill"><i class="bi bi-hand-thumbs-up"></i></submit>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                            <!-- <img src="https://cdn3.iconfinder.com/data/icons/iconset-1-1/24/icon_set_outlinder-10-256.png"> -->
                             <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-more-256.png">
                         </div>
                     </div>
@@ -39,5 +65,4 @@
         {% endfor %}
     </div>
 {% endblock %}
-
 
