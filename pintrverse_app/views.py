@@ -12,12 +12,27 @@ from pintrverse_app.forms import CreatePinForm
 from pintrverse_app.models import Pin, SavedPin, Tag, Like, Category
 # from pintrverse_app.utils import extract_keywords, get_history_list
 from users.models import User
-
+from django.db.models import Q
 
 # Create your views here.
 class ListAllPins(generic.ListView):
     model = Pin
     template_name = 'pintrverse_app/pin_list.html'
+    context_object_name = 'object_list'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # Check if the "my_param" parameter is in the request
+        search = self.request.GET.get('search')
+        if search:
+            queryset = queryset.filter(
+                Q(title__icontains=search) | 
+                Q(about__icontains=search) | 
+                Q(tag__name__icontains=search) 
+                )
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(ListAllPins, self).get_context_data(**kwargs)
@@ -77,7 +92,22 @@ class CreatePinView(generic.CreateView):
 class TodayPinView(generic.ListView):
     model = Pin
     template_name = 'pintrverse_app/todays_pin.html'
+    context_object_name = 'object_list'
     queryset = Pin.objects.filter(created_at__date=datetime.date.today())
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # Check if the "my_param" parameter is in the request
+        today_search = self.request.GET.get('today_search')
+        if today_search:
+            queryset = queryset.filter(
+                Q(title__icontains=today_search) | 
+                Q(about__icontains=today_search) | 
+                Q(tag__name__icontains=today_search) 
+                )
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(TodayPinView, self).get_context_data(**kwargs)

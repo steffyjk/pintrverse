@@ -41,7 +41,7 @@ class User(AbstractUser):
 
     @property
     def total_follower(self):
-        return self.followers.count()
+        return User.objects.filter(following__username=self.username).count()
 
     @property
     def total_following(self):
