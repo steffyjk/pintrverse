@@ -96,6 +96,17 @@ class UserFollowingList(generic.ListView):
         return queryset
 
 
+class UserFollowerList(generic.ListView):
+    model = User
+    template_name = 'users/user_follower_list.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+        queryset = user.followers.all()
+        return queryset
+
+
 class UnfollowUserView(View):
     success_message = "Successfully Unfollowed"
 
