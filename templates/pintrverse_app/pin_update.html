@@ -1,10 +1,188 @@
-{% extends "base.html" %}
-
+{#{% extends 'base.html' %}#}
+{#{% load crispy_forms_filters %}#}
+{#{% block extra_css %}#}
+{#    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">#}
+{#{% endblock %}#}
+{#{% block content %}#}
+{#    <div class="container">#}
+{#        <div class="row">#}
+{#            <div class="col mx-auto">#}
+{#                <div class="card">#}
+{#                    <div class="card-header">#}
+{#                        <h4>Update Pin</h4>#}
+{#                    </div>#}
+{#                    <div class="card-body">#}
+{#                        <form method="POST">#}
+{#                            {% csrf_token %}#}
+{#                            {{ form|crispy }}#}
+{#                            <button type="submit" class="btn btn-primary">Update Pin</button>#}
+{#                        </form>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}
+{##}
+{#{% extends 'base.html' %}#}
+{#{% load crispy_forms_filters %}#}
+{##}
+{#{% block extra_css %}#}
+{#    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">#}
+{#    <style>#}
+{#        /* Add custom styles here */#}
+{#        .card {#}
+{#            margin-top: 2rem;#}
+{#        }#}
+{#        .card-header {#}
+{#            background-color: #007bff;#}
+{#            color: #fff;#}
+{#            font-weight: bold;#}
+{#        }#}
+{#        .form-control {#}
+{#            border-radius: 0;#}
+{#        }#}
+{#        .form-control:focus {#}
+{#            border-color: #007bff;#}
+{#            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);#}
+{#        }#}
+{#        .btn-primary {#}
+{#            background-color: #007bff;#}
+{#            border-color: #007bff;#}
+{#            border-radius: 0;#}
+{#        }#}
+{#        .btn-primary:hover {#}
+{#            background-color: #0069d9;#}
+{#            border-color: #0062cc;#}
+{#        }#}
+{#        .btn-primary:focus, .btn-primary.focus {#}
+{#            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);#}
+{#        }#}
+{#        .alert-danger {#}
+{#            border-radius: 0;#}
+{#            margin-top: 1rem;#}
+{#        }#}
+{#        .alert-danger ul {#}
+{#            margin-bottom: 0;#}
+{#        }#}
+{#        .alert-danger li {#}
+{#            list-style-type: none;#}
+{#        }#}
+{#    </style>#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#    <div class="container">#}
+{#        <div class="row">#}
+{#            <div class="col mx-auto">#}
+{#                <div class="card">#}
+{#                    <div class="card-header">#}
+{#                        <h4 class="mb-0">Update Pin</h4>#}
+{#                    </div>#}
+{#                    <div class="card-body">#}
+{#                        <form method="POST">#}
+{#                            {% csrf_token %}#}
+{#                            {% if form.errors %}#}
+{#                                <div class="alert alert-danger">#}
+{#                                    <ul>#}
+{#                                        {% for field, errors in form.errors.items %}#}
+{#                                            {% for error in errors %}#}
+{#                                                <li>{{ field }}: {{ error }}</li>#}
+{#                                            {% endfor %}#}
+{#                                        {% endfor %}#}
+{#                                    </ul>#}
+{#                                </div>#}
+{#                            {% endif %}#}
+{#                            {{ form|crispy }}#}
+{#                            <button type="submit" class="btn btn-primary mt-3">Update Pin</button>#}
+{#                        </form>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% block extra_css %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            background-image: url('https://i.imgur.com/Qes6N8p.jpg');
+            background-size: cover;
+        }
+        .card {
+            border: none;
+            background-color: rgba(50, 50, 50, 0.5);
+        }
+        .card-header {
+            background-color: rgba(50, 50, 50, 0.7);
+            color: #fff;
+            font-size: 32px;
+            font-weight: bold;
+            border-bottom: 3px solid #6f42c1;
+            text-shadow: 2px 2px 4px #000000;
+        }
+        .form-control {
+            background-color: rgba(50, 50, 50, 0.8);
+            color: #fff;
+            border: none;
+        }
+        .form-control:focus {
+            background-color: rgba(50, 50, 50, 0.8);
+            color: #fff;
+            border-color: #6f42c1;
+        }
+        .btn-primary {
+            background-color: #6f42c1;
+            border-color: #6f42c1;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #000000;
+        }
+        .btn-primary:hover {
+            background-color: #3f1dcb;
+            border-color: #3f1dcb;
+        }
+        .crispy-forms label {
+            color: #fff;
+            font-size: 18px;
+            text-shadow: 1px 1px 2px #000000;
+        }
+        .crispy-forms input[type='text'] {
+            border: none;
+            border-radius: 0;
+            border-bottom: 2px solid #6f42c1;
+            padding: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #000000;
+        }
+        .crispy-forms input[type='text']:focus {
+            background-color: rgba(50, 50, 50, 0.8);
+            color: #fff;
+            border-color: #6f42c1;
+            border-radius: 0;
+            box-shadow: none;
+        }
+    </style>
+{% endblock %}
 {% block content %}
-  <h2>Update Pin</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-  </form>
+    <div class="container">
+        <div class="row">
+            <div class="col mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        Update Pin
+                    </div>
+                    <div class="card-body crispy-forms">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <button type="submit" class="btn btn-primary mt-3">Update Pin</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -1,73 +1,197 @@
 {% extends 'base.html' %}
-{% load crispy_forms_filters %}
-{% block extra_css %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-{% endblock %}
+{% load static %}
 {% block content %}
-    <div style="text-align: center" class="md-3">
-        {{ user.username }}
-    </div>
-    <div style="text-align: center">
-        {{ user.full_name }}
-    </div>
-    <div style="text-align: center">
-        <a href={% url 'users:following-list' %}>
-            <button class="btn btn-primary" style="text-align: center">
-                {{ user.total_following }} followings
-            </button>
-        </a>
-    </div>
-    <div style="text-align: center; padding: 20px">
-        <a href={% url 'users:reset_password' %}>
-            <button class="btn btn-primary" style="text-align: center">
-                Reset Password
-            </button>
-        </a>
-        <a href="{% url 'users:profile_edit' request.user.id%}">
-            <button class="btn btn-primary" style="text-align: center">
-                Edit Profile
-            </button>
-        </a>
+
+<div class="container">
+    <div class="row g-4">
+        <div class="col-3">
+
+            <div class="card bg-danger text-white rounded-4 shadow-sm">
+                <div class="card-body box-profile">
+                    <div class="text-center">
+                        <img class="img-fluid img-circle" src="{% static 'imgs/person-circle.svg' %}"
+                            alt="User profile picture" width="100" height="100">
+                    </div>
+                    <h3 class="fw-bold fs-5 text-center">{{ user.full_name }}</h3>
+                    <p class="text-muted text-center">{{ user.username }}</p>
+                    <ul class="list-group list-group-unbordered mb-3">
+                        <li class="list-group-item">
+                            <b>Followers</b> <a class="float-right text-decoration-none">{{ user.total_follower }}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Following</b> <a class="float-right text-decoration-none">{{ user.total_following }}</a>
+                        </li>
+                    </ul>
+                    <div class="row row-cols-1 w-100  justify-content-center">
+                        <div class="col w-100">
+                            <a href="{% url 'pintrverse:show-all-saved-pins' %}" class="btn btn-light w-100"><b><i class="bi bi-bookmark"></i> Saved Pins</b></a>
+                        </div>
+                        <div class="col">
+                            <a href="{% url 'pintrverse:create-pin' %}">
+                                <button class="btn btn-primary" style="text-align: center">
+                                    Create Pin
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">About Me</h3>
+                </div>
+
+                <div class="card-body">
+                    <strong><i class="fas fa-book mr-1"></i> Education</strong>
+                    <p class="text-muted">
+                        B.S. in Computer Science from the University of Tennessee at Knoxville
+                    </p>
+                    <hr>
+                    <strong><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
+                    <p class="text-muted">Malibu, California</p>
+                    <hr>
+                    <strong><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>
+                    <p class="text-muted">
+                        <span class="tag tag-danger">UI Design</span>
+                        <span class="tag tag-success">Coding</span>
+                        <span class="tag tag-info">Javascript</span>
+                        <span class="tag tag-warning">PHP</span>
+                        <span class="tag tag-primary">Node.js</span>
+                    </p>
+                    <hr>
+                    <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>
+                    <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum
+                        enim neque.</p>
+                </div>
+
+            </div> -->
+
+        </div>
+        <div class="col-9">
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 bg-dark pt-1 ps-3 pe-3 pb-4 g-3 rounded-4">
+                <div class="col">
+                    <a href="{% url 'pintrverse:search_users' %}" id="user_search" data-bs-toggle="tooltip" data-bs-title="Search User">
+                        <div class="card bg-danger text-center rounded-4" style="min-height: 10vh;">
+                            <div class="card-body">
+                                <i class="bi bi-search fs-2 text-white align-self-center"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="{% url 'pintrverse:create-pin' %}" data-bs-toggle="tooltip" data-bs-title="Search User">
+                        <div class="card bg-danger text-center rounded-4" style="min-height: 10vh;">
+                            <div class="card-body">
+                                <i class="bi bi-plus-circle fs-2 text-white align-self-center"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="{% url 'pintrverse:search_users' %}" id="user_search" data-bs-toggle="tooltip" data-bs-title="Search User">
+                        <div class="card bg-danger text-center rounded-4" style="min-height: 10vh;">
+                            <div class="card-body">
+                                <i class="bi bi-search fs-2 text-white align-self-center"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="{% url 'pintrverse:search_users' %}" id="user_search" data-bs-toggle="tooltip" data-bs-title="Search User">
+                        <div class="card bg-danger text-center rounded-4" style="min-height: 10vh;">
+                            <div class="card-body">
+                                <i class="bi bi-search fs-2 text-white align-self-center"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="{% url 'pintrverse:search_users' %}" id="user_search" data-bs-toggle="tooltip" data-bs-title="Search User">
+                        <div class="card bg-danger text-center rounded-4" style="min-height: 10vh;">
+                            <div class="card-body">
+                                <i class="bi bi-search fs-2 text-white align-self-center"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div style="text-align: center">
-        <a href={% url 'pintrverse:create-pin' %}>
-            <button class="btn btn-primary" style="text-align: center">
-                Create Pin
-            </button>
-        </a>
-        <a href={% url 'pintrverse:show-all-saved-pins' %}>
-            <button class="btn btn-primary" style="text-align: center">
-                Show all saved Pin
-            </button>
-        </a>
-    </div>
-    <hr>
+</div>
 
-{#    <div style="text-align: center">#}
-{#        <a href={% url 'pintrverse:fetch_keyword' %}>#}
-{#            <button class="btn btn-primary" style="text-align: center">#}
-{#                Fetch Keyword#}
-{#            </button>#}
-{#        </a>#}
-{#        <a href={% url 'pintrverse:fetch_keyword_cbv' %}>#}
-{#            <button class="btn btn-primary" style="text-align: center">#}
-{#                Fetch Keyword#}
-{#            </button>#}
-{#        </a>#}
-{#    </div>#}
-    <hr>
-    <div style="text-align: center">
-        <a href={% url 'pintrverse:search_users' %}>
-            <button class="btn btn-primary" style="text-align: center">
-                search other user
-            </button>
-        </a>
-        <a href={% url 'pintrverse:search_pins' %}>
-            <button class="btn btn-primary" style="text-align: center">
-                search Pins
-            </button>
-        </a>
+<div style="text-align: center" class="md-3">
+    {{ user.username }}
+</div>
+<div style="text-align: center">
+    {{ user.full_name }}
+</div>
+<div style="text-align: center">
+    <a href={% url 'users:following-list' %}>
+        <button class="btn btn-primary" style="text-align: center">
+            {{ user.total_following }} followings
+        </button>
+    </a>
+</div>
+<div style="text-align: center; padding: 20px">
+    <a href={% url 'users:reset_password' %}>
+        <button class="btn btn-primary" style="text-align: center">
+            Reset Password
+        </button>
+    </a>
+    <a href="{% url 'users:profile_edit' request.user.id%}">
+        <button class="btn btn-primary" style="text-align: center">
+            Edit Profile
+        </button>
+    </a>
+</div>
 
-    </div>
+<div style="text-align: center">
+    <a href={% url 'pintrverse:create-pin' %}>
+        <button class="btn btn-primary" style="text-align: center">
+            Create Pin
+        </button>
+    </a>
+    <a href={% url 'pintrverse:show-all-saved-pins' %}>
+        <button class="btn btn-primary" style="text-align: center">
+            Show all saved Pin
+        </button>
+    </a>
+</div>
+<hr>
+
+{# <div style="text-align: center">#}
+    {# <a href={% url 'pintrverse:fetch_keyword' %}>#}
+        {# <button class="btn btn-primary" style="text-align: center">#}
+            {# Fetch Keyword#}
+            {# </button>#}
+        {# </a>#}
+    {# <a href={% url 'pintrverse:fetch_keyword_cbv' %}>#}
+        {# <button class="btn btn-primary" style="text-align: center">#}
+            {# Fetch Keyword#}
+            {# </button>#}
+        {# </a>#}
+    {# </div>#}
+<hr>
+<div style="text-align: center">
+    <a href={% url 'pintrverse:search_users' %}>
+        <button class="btn btn-primary" style="text-align: center">
+            search other user
+        </button>
+    </a>
+    <a href={% url 'pintrverse:search_pins' %}>
+        <button class="btn btn-primary" style="text-align: center">
+            search Pins
+        </button>
+    </a>
+
+</div>
+<script>
+    // tooltipTriggerEl = document.getElementById('user_search')
+    // const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    // const tooltipList = [tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
 {% endblock %}

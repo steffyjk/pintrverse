@@ -1,0 +1,97 @@
+<style>
+    .active{
+        background-color: #ca2028 !important;
+        border-color: #ca2028 !important;
+    }
+</style>
+{% url 'pintrverse:all-pins' as home_url %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary mb-4">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{home_url}}">
+        <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/pinterest-512.png" alt="Logo" width="32" height="30" class="d-inline-block align-text-top">
+        <strong>Pintrverse</strong>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        {% url 'pintrverse:today-pin' as today_url %}
+        {% url 'users:profile' as profile_url %}
+        {% url 'users:login' as login_url %}
+        {% url 'users:register' as register_url %}
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
+          <li class="nav-item">
+            <a {% if request.path == home_url %} class="btn btn-dark rounded-pill active" {% else %} class="btn btn-dark rounded-pill" {% endif %} aria-current="page" href="{{home_url}}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a {% if request.path == today_url %} class="btn btn-dark rounded-pill active" {% else %} class="btn btn-dark rounded-pill" {% endif %} href="{{today_url}}">Today</a>
+          </li>
+          
+          
+
+        </ul>
+        <span class="d-flex">
+            <ul class="navbar-nav gap-1">
+                {% if request.path == today_url %}
+                <li class="nav-item">
+                    <input type="search" class="form-control border border-dark border-3 rounded-pill" name="today_search" id="today_search" placeholder="Search Pin">
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <input type="search" class="form-control border border-dark border-3 rounded-pill" name="search_home" id="search_home" placeholder="Search Pin">
+                </li>
+                {% endif %}
+                
+                {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                  <a {% if request.path == profile_url %} class="btn btn-dark rounded-pill active" {% else %} class="btn btn-dark rounded-pill" {% endif %} href="{{profile_url}}">
+                      <i class="bi bi-person-circle"></i> {{user.username}}
+                  </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-dark rounded-circle" title="Log Out" href="{% url 'users:logout' %}">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                  <a {% if request.path == login_url %} class="btn btn-dark rounded-pill active" {% else %} class="btn btn-dark rounded-pill" {% endif %} href="{{login_url}}">
+                      Log In
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a {% if request.path == register_url %} class="btn btn-dark rounded-pill active" {% else %} class="btn btn-dark rounded-pill" {% endif %} href="{{register_url}}">
+                      Sign Up
+                  </a>
+                </li>
+                {% endif %}
+                  
+            </ul>
+        </span>
+      </div>
+    </div>
+  </nav>
+  {% if request.path == today_url %}
+  <script>
+    today = `{{today_url}}`
+    let today_search_input = document.getElementById('today_search')
+    today_search_input.addEventListener('keyup', function(event) {
+        if (event.keyCode === 13) {
+          // Call your function here
+          window.location = today+`?today_search=${today_search.value}`
+        }
+      });
+  </script>
+  {% else %}
+  <script>
+    home = `{{home_url}}`
+    let home_search_input = document.getElementById('search_home')
+    home_search_input.addEventListener('keyup', function(event) {
+        if (event.keyCode === 13) {
+          // Call your function here
+          window.location = home+`?search=${home_search_input.value}`
+        }
+      });
+  </script>
+  
+  {% endif %}
