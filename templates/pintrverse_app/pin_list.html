@@ -55,8 +55,8 @@
                                     </form>
                                 {% endif %}
                                 {% if pin.user.id == request.user.id %}
-                                    <a href="{% url 'pintrverse:delete-pin' pk=pin.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
-                                    <a href="{% url 'pintrverse:update-pin' pk=pin.id %}" class="btn btn-danger"><i class="bi bi-pencil-square"></i></a>
+                                    <a href="{% url 'pintrverse:delete-pin' pk=pin.id %}" class="btn btn-danger"><i class="bi bi-trash" style="color: black"></i></a>
+                                    <a href="{% url 'pintrverse:update-pin' pk=pin.id %}" class="btn btn-danger"><i class="bi bi-pencil-square" style="color: black"></i></a>
                                 {% endif %}
                             {% endif %}
                             
