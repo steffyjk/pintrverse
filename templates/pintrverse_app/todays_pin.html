@@ -1,12 +1,66 @@
 {% extends 'base.html' %}
-{% block extra_css %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-{% endblock %}
 {% block content %}
     {% include 'commons/messages.html' %}
     <div class="container">
-        {% for pin in object_list %}
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 justify-content-center g-3">
+            
+            {% for pin in object_list %}
+            
+            <div class="col">
+                <div class="card rounded-5" style="width: 18rem;">
+                    <img src="{{pin.pin_file.url}}" class="card-img-top rounded-5" alt="..." height="170" onclick="window.location = '{% url 'pintrverse:detail-pin' pin.id %}'"> 
+                    <div class="card-body" style="height: 15vh;" onclick="window.location = '{% url 'pintrverse:detail-pin' pin.id %}'">
+                        <h5 class="card-title fw-bold">{{pin.title}}</h5>
+                        <p class="card-text">{{pin.about|truncatechars:50}}</p>
+                    </div>
+                    <div class="card-footer hstack bg-dark text-white rounded-5 gap-1">
+                        
+                        <img class="img-fluid rounded-circle border border-white border-2" src="{{pin.user.profile_picture.url}}" width="30" height="30" alt="profile_picture" style="object-fit: cover;" {% if request.user.username == pin.user.username %} onclick="window.location = '{% url 'users:profile' %}'" {% else %} onclick="window.location = '{% url 'users:other-user-profile' pin.user.id %}'" {% endif %}>
+                        <button type="button" class="btn btn-dark btn-sm" {% if request.user.username == pin.user.username %} onclick="window.location = '{% url 'users:profile' %}'" {% else %}onclick="window.location = '{% url 'users:other-user-profile' pin.user.id %}'"{% endif %}>{{pin.user.username}}</button>
+                        
+                        {% if request.user.is_authenticated %}
+
+                            {% if pin.id in saved_pins %}
+                            <form method="POST" action="{% url 'pintrverse:unsave-pin' pin.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-dark btn-sm"><i class="fa-solid fa-bookmark text-warning"></i></button>
+                            </form>
+                            {% else %}
+                            <form method="POST" action="{% url 'pintrverse:save-pin' pin.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-dark btn-sm"><i class="fa-regular fa-bookmark"></i></button>
+                            </form>
+                            {% endif %}
+
+                            {% if pin.id in liked_pins %}
+                                <form method="POST" action="{% url 'pintrverse:unlike-pin' pin.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-dark btn-sm"><i class="fa-solid fa-heart text-danger"></i></button>
+                                </form>
+                            {% else %}
+                                <form method="POST" action="{% url 'pintrverse:like-pin' pin.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-dark btn-sm"><i class="fa-regular fa-heart"></i></button>
+                                </form>
+                            {% endif %}
+                        
+                            {% if pin.user.id == request.user.id %}
+                            <a href="{% url 'pintrverse:update-pin' pk=pin.id %}" class="btn btn-dark btn-sm"><i class="fa-regular fa-pen-to-square"></i></a>
+                            {% endif %}
+
+                            {% if pin.user.id == request.user.id %}
+                            <a href="{% url 'pintrverse:delete-pin' pk=pin.id %}" class="btn btn-dark btn-sm"><i class="fa-regular fa-trash-can"></i></a>
+                            {% endif %}
+                        
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+                
+        </div>
+        {% comment %} {% for pin in object_list %}
 
             <div class="window">
                 {% with my_file=pin.pin_file %}
@@ -62,7 +116,7 @@
                 </div>
 
             </div>
-        {% endfor %}
+        {% endfor %} {% endcomment %}
     </div>
 {% endblock %}
 

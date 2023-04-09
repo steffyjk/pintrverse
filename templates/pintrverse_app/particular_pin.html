@@ -1,36 +1,28 @@
 {% extends 'base.html' %}
-{% load crispy_forms_filters %}
-{% load static %}
 {% block content %}
-    <form method="POST" enctype="multipart/form-data" action={% url 'pintrverse:save-pin' pin.id %}>
-        {% csrf_token %}
-        <input type="submit" value="Save">
-    </form>
-    <h1>{{ pin.title }}</h1>
-    <table class="table table-borderless">
-
-        <thead class="border-bottom font-weight-bold">
-        <tr>
-            <td>Pin id</td>
-            <td>Pin name</td>
-            <td>User</td>
-        </tr>
-        </thead>
-
-        <tbody>
-        <tr>
-            <td>{{ pin.id }}</td>
-            <td>{{ pin.title }}</td>
-            <td>{{ pin.user }}</td>
-            {% with my_file=pin.pin_file %}
-                {% if my_file %}
-                    <img src="{{ my_file.url }}">
-                {% else %}
-                    <p>No file uploaded.</p>
-                {% endif %}
-            {% endwith %}
-        </tr>
-        </tbody>
-
-    </table>
-{% endblock %}
+<div class="container">
+    <div class="card">
+        <div class="card-header text-center bg-danger text-white">
+            <h2 class="fw-bold">{{pin.title|capfirst}}</h2>
+            <p class="text-muted mb-0">{{pin.category}}</p>
+        </div>
+        <img src="{{pin.pin_file.url}}" class="img-fluid" alt="..." height="200" onclick="window.location = '/pintrverse/detail-pin/4'">
+        <div class="card-body">
+            
+            {% autoescape off %}
+                {{pin.about}}
+            {% endautoescape %}
+            
+        </div>  
+        <div class="card-footer">
+            
+            {% if pin.tag %}
+            {% for tag in pin.tag.all %}
+                #{{ tag }},
+            {% endfor %}
+            {% endif %}
+                
+        </div>
+    </div>
+</div>
+{% endblock content %}
