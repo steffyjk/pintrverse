@@ -8,16 +8,19 @@
             
             <div class="col">
                 <div class="card rounded-5" style="width: 18rem;">
-                    <img src="{{pin.pin_file.url}}" class="card-img-top rounded-5" alt="..." height="170" onclick="window.location = '{% url 'pintrverse:detail-pin' pin.id %}'"> 
+                    <img src="{{pin.pin_file.url}}" class="card-img-top rounded-5" alt="..." height="170" onclick="window.location = '{% url 'pintrverse:detail-pin' pin.id %}'">
                     <div class="card-body" style="height: 15vh;" onclick="window.location = '{% url 'pintrverse:detail-pin' pin.id %}'">
                         <h5 class="card-title fw-bold">{{pin.title}}</h5>
                         <p class="card-text">{{pin.about|truncatechars:50}}</p>
                     </div>
                     <div class="card-footer hstack bg-dark text-white rounded-5 gap-1">
-                        
-                        <img class="img-fluid rounded-circle border border-white border-2" src="{{pin.user.profile_picture.url}}" width="30" height="30" alt="profile_picture" style="object-fit: cover;" {% if request.user.username == pin.user.username %} onclick="window.location = '{% url 'users:profile' %}'" {% else %} onclick="window.location = '{% url 'users:other-user-profile' pin.user.id %}'" {% endif %}>
+                        {% if user.profile_picture %}
+                            <img class="img-fluid rounded-circle border border-white border-2" src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s profile picture" onclick="window.location = '{% url 'users:other-user-profile' pin.user.id %}'">
+                        {% else %}
+                            <i class="fas fa-user-circle"></i>
+                        {% endif %}
                         <button type="button" class="btn btn-dark btn-sm" {% if request.user.username == pin.user.username %} onclick="window.location = '{% url 'users:profile' %}'" {% else %}onclick="window.location = '{% url 'users:other-user-profile' pin.user.id %}'"{% endif %}>{{pin.user.username}}</button>
-                        
+
                         {% if request.user.is_authenticated %}
 
                             {% if pin.id in saved_pins %}
