@@ -8,7 +8,7 @@ from django.contrib import messages
 from rest_framework.response import Response
 
 from pintrverse_app.filters import UserFilterSet, PinFilterSet
-from pintrverse_app.forms import CreatePinForm
+from pintrverse_app.forms import CreatePinForm,CategoryForm,TagForm
 from pintrverse_app.models import Pin, SavedPin, Tag, Like, Category
 # from pintrverse_app.utils import extract_keywords, get_history_list
 from users.models import User
@@ -73,6 +73,12 @@ class CreatePinView(generic.CreateView):
     form_class = CreatePinForm
     success_url = reverse_lazy("home")
 
+    def get_context_data(self, **kwargs):
+        context = super(CreatePinView, self).get_context_data(**kwargs)
+        context['category'] = CategoryForm()
+        context['tag'] = TagForm()
+        return context
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         messages.success(self.request, 'Your new pin created.')
@@ -80,12 +86,18 @@ class CreatePinView(generic.CreateView):
 
     def post(self, request, *args, **kwargs):
         if 'categorybtn' in request.POST:
-            category = request.POST.get('category_name')
-            try:
-                category = Category.objects.create(name=category)
-                messages.success(request, "Category Created !")
-            except:
+            catform = CategoryForm(request.POST)
+            if catform.is_valid():
+                catform.save()
+            else:
                 messages.error(request, "Something Went Wrong Creating Category !")
+
+        if 'tagbtn' in request.POST:
+            tagform = TagForm(request.POST)
+            if tagform.is_valid():
+                tagform.save()
+            else:
+                messages.error(request, "Something Went Wrong Creating Tag !")
         return super().post(request, *args, **kwargs)
 
 
@@ -139,6 +151,9 @@ class ParticularPinDetail(generic.DetailView):
     slug_url_kwarg = 'pin_id'
     slug_field = 'id'
 
+    # def get_context_data(self, **kwargs):
+    #     context = super(ParticularPinDetail,self).get_context_data(**kwargs)
+    #     print(context['pin'].tag)
 
 class SavePinView(generic.View):
 
