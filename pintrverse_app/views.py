@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from pintrverse_app.filters import UserFilterSet, PinFilterSet
 from pintrverse_app.forms import CreatePinForm,CategoryForm,TagForm
 from pintrverse_app.models import Pin, SavedPin, Tag, Like, Category
+from pintrverse_app.utils import extract_keywords, get_history_list
 # from pintrverse_app.utils import extract_keywords, get_history_list
 from users.models import User
 from django.db.models import Q
@@ -243,28 +244,29 @@ class ShowAllSavedPin(generic.ListView):
 
 #
 # # FUNCTIONAL BASED FETCH PIN FROM USER's history's keyword
-# def fetch_keyword_pin(request):
-#     keywords = extract_keywords(get_history_list(5))
-#     for keyword in keywords:
-#         fetched_tag = Tag.objects.filter(name=str(keyword))
-#         break
-#     fetched_pin = Pin.objects.filter(tag__id__in=fetched_tag.all())
-#     return HttpResponse(fetched_pin)
-#
-#
-# class FetchKeyWordPin(generic.ListView):
-#     model = Pin
-#     template_name = 'pintrverse_app/fetched_pin.html'
-#     keywords = extract_keywords(get_history_list(5))  # function for fetch history & filter keywords from that
-#     ls = []
-#     for keyword in keywords:
-#         if fetched_tag := Tag.objects.filter(name=str(keyword)):  # find TAGS Based on keyword [ history ]
-#             for i in fetched_tag.all():
-#                 queryset = Pin.objects.filter(tag=i.id)  # Find Pin based on Tag
-#                 ls.append(queryset)
-#         queryset = []
-#         for j in ls:
-#             queryset += j
+def fetch_keyword_pin(request):
+    keywords = extract_keywords(get_history_list(5))
+    for keyword in keywords:
+        fetched_tag = Tag.objects.filter(name=str(keyword))
+        break
+    fetched_pin = Pin.objects.filter(tag__id__in=fetched_tag.all())
+    return HttpResponse(fetched_pin)
+
+
+class FetchKeyWordPin(generic.ListView):
+    model = Pin
+    template_name = 'pintrverse_app/fetched_pin.html'
+    keywords = extract_keywords(get_history_list(50))  # function for fetch history & filter keywords from that
+    print("---------key", keywords)
+    ls = []
+    for keyword in keywords:
+        if fetched_tag := Tag.objects.filter(name=str(keyword)):  # find TAGS Based on keyword [ history ]
+            for i in fetched_tag.all():
+                queryset = Pin.objects.filter(tag=i.id)  # Find Pin based on Tag
+                ls.append(queryset)
+        queryset = []
+        for j in ls:
+            queryset += j
 
 
 class LikeUnlikePin(generic.View):

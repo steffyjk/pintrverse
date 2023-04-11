@@ -2,7 +2,7 @@ from django.urls import path
 
 from pintrverse_app.views import ListAllPins, CreatePinView, TodayPinView, ParticularPinDetail, SavePinView, \
     LikeUnlikePin, RestApiForSave, UnSavePinView, LikeView, \
-    UnlikeView, search_users, search_pins, ShowAllSavedPin,DeletePinView,UpdatePin
+    UnlikeView, search_users, search_pins, ShowAllSavedPin, DeletePinView, UpdatePin, FetchKeyWordPin, fetch_keyword_pin
 
 app_name = 'pintrverse'
 urlpatterns = [
@@ -13,8 +13,8 @@ urlpatterns = [
     path('detail-pin/<int:pin_id>', ParticularPinDetail.as_view(), name='detail-pin'),
     path('save-pin/<int:pk>', SavePinView.as_view(), name='save-pin'),
     path('show-all-saved/', ShowAllSavedPin.as_view(), name='show-all-saved-pins'),
-    # path('fetch-keyword-cbv/', FetchKeyWordPin.as_view(), name='fetch_keyword_cbv'),  # class based
-    # path('fetch-keyword/', fetch_keyword_pin, name='fetch_keyword'),  # function based
+    path('fetch-keyword-cbv/', FetchKeyWordPin.as_view(), name='fetch_keyword_cbv'),  # class based
+    path('fetch-keyword/', fetch_keyword_pin, name='fetch_keyword'),  # function based
     path('like-unlike/<int:pin_id>/', LikeUnlikePin.as_view(), name='like_unlike'),
     path('save-pin/<int:pk>', SavePinView.as_view(), name='save-pin'),
     path('unsave-pin/<int:pk>', UnSavePinView.as_view(), name='unsave-pin'),
@@ -26,7 +26,7 @@ urlpatterns = [
     path('rest-api/', RestApiForSave.as_view(), name='rest-api'),
 
     # Search
-    path('search-users',search_users, name='search_users'),
-    path('search-pins',search_pins, name='search_pins')
+    path('search-users', search_users, name='search_users'),
+    path('search-pins', search_pins, name='search_pins')
 
 ]
