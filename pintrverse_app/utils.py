@@ -10,6 +10,7 @@ def get_history_list(range_number):
     his = outputs.histories
 
     history_list = []
+    print('--->', his)
     count = 0
     for _ in range(range_number-1):
         count -= 1
