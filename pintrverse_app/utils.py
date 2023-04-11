@@ -13,7 +13,10 @@ def get_history_list(range_number):
     count = 0
     for _ in range(range_number-1):
         count -= 1
-        history_list.append(his[count])
+        try:
+            history_list.append(his[count])
+        except:
+            pass
     return history_list
 
 
