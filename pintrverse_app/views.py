@@ -256,7 +256,7 @@ def fetch_keyword_pin(request):
 class FetchKeyWordPin(generic.ListView):
     model = Pin
     template_name = 'pintrverse_app/fetched_pin.html'
-    keywords = extract_keywords(get_history_list(50))  # function for fetch history & filter keywords from that
+    keywords = extract_keywords(get_history_list(10))  # function for fetch history & filter keywords from that
     print("---------key", keywords)
     ls = []
     for keyword in keywords:

@@ -1,6 +1,7 @@
 import urllib.parse
 import re
 
+import browser_history.utils
 from browser_history import get_history
 import tldextract
 
@@ -8,6 +9,7 @@ import tldextract
 def get_history_list(range_number):
     outputs = get_history()  # HERE GET_HISTORY IS THE FUNCTION FROM BROWSER_HISTORY WHICH GONNA FETCH HISTORY OF USER
     print("----> this is outputs", outputs)
+    print("----browsers:: ", browser_history.utils.get_browser('chrome'))
     his = outputs.histories
 
     history_list = []
