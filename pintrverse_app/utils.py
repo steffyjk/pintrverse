@@ -7,6 +7,7 @@ import tldextract
 
 def get_history_list(range_number):
     outputs = get_history()  # HERE GET_HISTORY IS THE FUNCTION FROM BROWSER_HISTORY WHICH GONNA FETCH HISTORY OF USER
+    print("----> this is outputs", outputs)
     his = outputs.histories
 
     history_list = []
