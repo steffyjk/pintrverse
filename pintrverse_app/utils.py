@@ -11,7 +11,7 @@ def get_history_list(range_number):
 
     history_list = []
     count = 0
-    for _ in range(range_number):
+    for _ in range(range_number-1):
         count -= 1
         history_list.append(his[count])
     return history_list
