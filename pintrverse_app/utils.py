@@ -8,12 +8,12 @@ import tldextract
 
 def get_history_list(range_number):
     outputs = get_history()  # HERE GET_HISTORY IS THE FUNCTION FROM BROWSER_HISTORY WHICH GONNA FETCH HISTORY OF USER
-    print("----> this is outputs", outputs)
-    print("----browsers:: ", browser_history.utils.get_browser('chrome'))
+    # print("----> this is outputs", outputs)
+    # print("----browsers:: ", browser_history.utils.get_browser('chrome'))
     his = outputs.histories
 
     history_list = []
-    print('--->', his)
+    # print('--->', his)
     count = 0
     for _ in range(range_number-1):
         count -= 1
@@ -47,3 +47,4 @@ def extract_keywords(history_list):
 
 # # ans = extract_keywords(get_history_list(5))
 # # print(ans)
+
