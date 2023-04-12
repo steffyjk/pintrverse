@@ -1,4 +1,6 @@
 import datetime
+from functools import reduce
+from operator import or_
 
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -8,12 +10,135 @@ from django.contrib import messages
 from rest_framework.response import Response
 
 from pintrverse_app.filters import UserFilterSet, PinFilterSet
-from pintrverse_app.forms import CreatePinForm,CategoryForm,TagForm
+from pintrverse_app.forms import CreatePinForm, CategoryForm, TagForm
 from pintrverse_app.models import Pin, SavedPin, Tag, Like, Category
-from pintrverse_app.utils import extract_keywords, get_history_list
+# from pintrverse_app.utils import extract_keywords, get_history_list
 # from pintrverse_app.utils import extract_keywords, get_history_list
 from users.models import User
 from django.db.models import Q
+from pathlib import Path
+import getpass
+import sqlite3
+from pprint import pprint
+from django.db.models import Case, When, Value, IntegerField, BooleanField, F
+from django.db.models.functions import Coalesce
+import os
+import shutil
+from functools import reduce
+from operator import or_
+from django.db.models import Case, When, Value, CharField
+from django.db.models.functions import Lower
+
+# Retrieve the login name of the current user
+def get_current_user():
+    user = os.getlogin()
+    print("Current logged-in user:", user)
+    return user
+
+
+def detect_os(request):
+    logged_user = get_current_user()
+    user_agent = request.META.get('HTTP_USER_AGENT', '').lower()
+
+    if 'windows' in user_agent:
+        path_to_check = Path(r'C:\Users\%s\AppData\Local\Google\Chrome\User Data\Default\History'%(logged_user))
+        print(path_to_check)
+        # Check if the path exists
+        if path_to_check.is_file():
+            shutil.copy(path_to_check, r'C:\Users\%s\Desktop\History'%(logged_user))
+            conn = sqlite3.connect(r'C:\Users\%s\Desktop\History'%(logged_user))
+            cursor = conn.cursor()
+
+            # Retrieve search history from the 'keyword_search_terms' table
+            cursor.execute("SELECT * FROM keyword_search_terms")
+            rows = cursor.fetchall()
+            pprint(rows)
+
+            # Close the database connection
+            # j
+            # FETCH KEYWORD FROM ROWS FETCHED
+            history_keywords = []
+            for row in rows:
+                if row[2] not in history_keywords:
+                    history_keywords.append(row[2])
+
+            # Close the database connection
+            # cursor.close()
+            # conn.close()
+            print(f"Chrome Installed.")
+        else:
+            history_keywords = []
+            print(f"Chrome is not installed.")
+
+        # return 'linux'
+        return history_keywords
+    elif 'mac' in user_agent:
+        pass
+        path_to_check = Path(f'/Users/{logged_user}/Library/Application Support/Google/Chrome/Default/History')
+
+        # # Check if the path exists
+        if path_to_check.is_file():
+            shutil.copy(path_to_check, r'/Users/%s/Desktop'%(logged_user))
+            conn = sqlite3.connect(r'/Users/%s/Desktop'%(logged_user))
+            cursor = conn.cursor()
+            # Retrieve search history from the 'keyword_search_terms' table
+            cursor.execute("SELECT * FROM keyword_search_terms")
+            rows = cursor.fetchall()
+            pprint(rows)
+            # # Close the database connection
+            # cursor.close()
+            # conn.close()
+            # FETCH KEYWORD FROM ROWS FETCHED
+            history_keywords = []
+            for row in rows:
+                history_keywords.append(row[2])
+
+            # # Close the database connection
+            # cursor.close()
+            # conn.close()
+            print(f"Chrome Installed.")
+        else:
+            history_keywords = []
+            print(f"Chrome is not installed.")
+
+            # return 'linux'
+            return history_keywords
+    elif 'linux' in user_agent:
+
+        path_to_check = Path(f'/home/{logged_user}/.config/google-chrome/Default/History')
+
+        # # Check if the path exists
+        if path_to_check.is_file():
+            shutil.copy(path_to_check, r'/home/%s/Desktop/History'%(logged_user))
+            conn = sqlite3.connect(r'/home/%s/Desktop/History'%(logged_user))
+            cursor = conn.cursor()
+
+        #     # Retrieve search history from the 'keyword_search_terms' table
+            cursor.execute("SELECT * FROM keyword_search_terms")
+            rows = cursor.fetchall()
+            pprint(rows)
+
+            # Close the database connection
+            # j
+            # FETCH KEYWORD FROM ROWS FETCHED
+            history_keywords = []
+            for row in rows:
+                if row[2] not in history_keywords:
+                    history_keywords.append(row[2])
+
+            # Close the database connection
+            # cursor.close()
+            # conn.close()
+            print(f"Chrome Installed.")
+        else:
+            history_keywords = []
+            print(f"Chrome is not installed.")
+
+        return history_keywords
+    else:
+        # Unable to detect OS
+        return 'Error'
+
 
 # Create your views here.
 class ListAllPins(generic.ListView):
@@ -24,19 +149,31 @@ class ListAllPins(generic.ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
 
+        keywords = detect_os(self.request)
+        # Define the filter expression using reduce and Q objects
+        filter_expr = reduce(or_, [Q(tag__name__icontains=value) for value in keywords])
+
+        # Filter queryset of YourModel based on related field value
+        mldata = Pin.objects.filter(filter_expr)
+        # keywords = sorted(keywords,reverse=True)
         # Check if the "my_param" parameter is in the request
         search = self.request.GET.get('search')
         if search:
             queryset = queryset.filter(
-                Q(title__icontains=search) | 
-                Q(about__icontains=search) | 
-                Q(tag__name__icontains=search) 
-                )
+                Q(title__icontains=search) |
+                Q(about__icontains=search) |
+                Q(tag__name__icontains=search)
+            )     
 
-        return queryset
+        return queryset,mldata
 
     def get_context_data(self, **kwargs):
         context = super(ListAllPins, self).get_context_data(**kwargs)
+        queryset,mldata = self.get_queryset()
+
+        context['object_list'] = queryset
+        context['mldata'] = mldata
+        
         for j in context:
             print(j)
         pins = Pin.objects.all()
@@ -115,11 +252,11 @@ class TodayPinView(generic.ListView):
         today_search = self.request.GET.get('today_search')
         if today_search:
             queryset = queryset.filter(
-                Q(title__icontains=today_search) | 
-                Q(about__icontains=today_search) | 
-                Q(tag__name__icontains=today_search) 
-                )
-
+                Q(title__icontains=today_search) |
+                Q(about__icontains=today_search) |
+                Q(tag__name__icontains=today_search)
+            )
+        
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -155,6 +292,7 @@ class ParticularPinDetail(generic.DetailView):
     # def get_context_data(self, **kwargs):
     #     context = super(ParticularPinDetail,self).get_context_data(**kwargs)
     #     print(context['pin'].tag)
+
 
 class SavePinView(generic.View):
 
@@ -243,30 +381,30 @@ class ShowAllSavedPin(generic.ListView):
 
 
 #
-# # FUNCTIONAL BASED FETCH PIN FROM USER's history's keyword
-def fetch_keyword_pin(request):
-    keywords = extract_keywords(get_history_list(5))
-    for keyword in keywords:
-        fetched_tag = Tag.objects.filter(name=str(keyword))
-        break
-    fetched_pin = Pin.objects.filter(tag__id__in=fetched_tag.all())
-    return HttpResponse(fetched_pin)
+# # # FUNCTIONAL BASED FETCH PIN FROM USER's history's keyword
+# def fetch_keyword_pin(request):
+#     keywords = extract_keywords(get_history_list(5))
+#     for keyword in keywords:
+#         fetched_tag = Tag.objects.filter(name=str(keyword))
+#         break
+#     fetched_pin = Pin.objects.filter(tag__id__in=fetched_tag.all())
+#     return HttpResponse(fetched_pin)
 
 
-class FetchKeyWordPin(generic.ListView):
-    model = Pin
-    template_name = 'pintrverse_app/fetched_pin.html'
-    keywords = extract_keywords(get_history_list(10))  # function for fetch history & filter keywords from that
-    print("---------key", keywords)
-    ls = []
-    for keyword in keywords:
-        if fetched_tag := Tag.objects.filter(name=str(keyword)):  # find TAGS Based on keyword [ history ]
-            for i in fetched_tag.all():
-                queryset = Pin.objects.filter(tag=i.id)  # Find Pin based on Tag
-                ls.append(queryset)
-        queryset = []
-        for j in ls:
-            queryset += j
+# class FetchKeyWordPin(generic.ListView):
+#     model = Pin
+#     template_name = 'pintrverse_app/fetched_pin.html'
+#     keywords = extract_keywords(get_history_list(10))  # function for fetch history & filter keywords from that
+#     # print("---------key", keywords)
+#     ls = []
+#     for keyword in keywords:
+#         if fetched_tag := Tag.objects.filter(name=str(keyword)):  # find TAGS Based on keyword [ history ]
+#             for i in fetched_tag.all():
+#                 queryset = Pin.objects.filter(tag=i.id)  # Find Pin based on Tag
+#                 ls.append(queryset)
+#         queryset = []
+#         for j in ls:
+#             queryset += j
 
 
 class LikeUnlikePin(generic.View):
