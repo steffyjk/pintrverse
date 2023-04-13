@@ -1,4 +1,5 @@
 import datetime
+import json
 from functools import reduce
 from operator import or_
 
@@ -469,4 +470,11 @@ from django.http import JsonResponse
 def set_logname(request):
     username = request.POST.get('logname')
     request.META['LOGNAME'] = username
-    return JsonResponse({'status': 'success'})
+    meta_dict = {}
+    for key, value in request.META.items():
+        # Skip keys with non-serializable values
+        if not isinstance(value, (int, str, float, bool, list, dict)):
+            continue
+        meta_dict[key] = value
+    return JsonResponse({'status': 'success',
+                         'REQUEST':json.dumps(meta_dict)})
