@@ -147,26 +147,26 @@ class ListAllPins(generic.ListView):
     template_name = 'pintrverse_app/pin_list.html'
     context_object_name = 'object_list'
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-
-        keywords = detect_os(self.request)
-        # Define the filter expression using reduce and Q objects
-        filter_expr = reduce(or_, [Q(tag__name__icontains=value) for value in keywords])
-
-        # Filter queryset of YourModel based on related field value
-        mldata = Pin.objects.filter(filter_expr)
-        # keywords = sorted(keywords,reverse=True)
-        # Check if the "my_param" parameter is in the request
-        search = self.request.GET.get('search')
-        if search:
-            queryset = queryset.filter(
-                Q(title__icontains=search) |
-                Q(about__icontains=search) |
-                Q(tag__name__icontains=search)
-            )
-
-        return queryset, mldata
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #
+    #     # keywords = detect_os(self.request)
+    #     # Define the filter expression using reduce and Q objects
+    #     # filter_expr = reduce(or_, [Q(tag__name__icontains=value) for value in keywords])
+    #     #
+    #     # Filter queryset of YourModel based on related field value
+    #     # mldata = Pin.objects.filter(filter_expr)
+    #     # keywords = sorted(keywords,reverse=True)
+    #     # Check if the "my_param" parameter is in the request
+    #     # search = self.request.GET.get('search')
+    #     # if search:
+    #     #     queryset = queryset.filter(
+    #     #         Q(title__icontains=search) |
+    #     #         Q(about__icontains=search) |
+    #     #         Q(tag__name__icontains=search)
+    #     #     )
+    #
+    #     return queryset, mldata
 
     def get_context_data(self, **kwargs):
         context = super(ListAllPins, self).get_context_data(**kwargs)
