@@ -170,13 +170,13 @@ class ListAllPins(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListAllPins, self).get_context_data(**kwargs)
-        queryset, mldata = self.get_queryset()
+        # queryset, mldata = self.get_queryset()
 
-        context['object_list'] = queryset
-        context['mldata'] = mldata
+        # context['object_list'] = queryset
+        # context['mldata'] = mldata
 
-        for j in context:
-            print(j)
+        # for j in context:
+        #     print(j)
         pins = Pin.objects.all()
         if self.request.user.is_authenticated:
             pins_saved = []
