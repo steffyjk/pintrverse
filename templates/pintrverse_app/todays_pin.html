@@ -16,7 +16,7 @@
                     <div class="card-footer hstack bg-dark text-white rounded-5 gap-1">
 
                         {% if user.profile_picture %}
-                            <img class="img-fluid rounded-circle border border-white border-2" src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s profile picture" onclick="window.location = '{% url 'users:other-user-profile' pin.user.id %}'">
+                            <img class="img-fluid rounded-circle border border-white border-2"  width="30" height="30" src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s profile picture" onclick="window.location = '{% url 'users:other-user-profile' pin.user.id %}'">
                         {% else %}
                             <i class="fas fa-user-circle"></i>
                         {% endif %}
