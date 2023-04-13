@@ -29,6 +29,7 @@ from operator import or_
 from django.db.models import Case, When, Value, CharField
 from django.db.models.functions import Lower
 
+
 # Retrieve the login name of the current user
 def get_current_user():
     user = os.getlogin()
@@ -473,3 +474,12 @@ def get_user_os(request):
         response_data = {'error': 'User-Agent header not found in the request'}
 
     return JsonResponse(response_data)
+
+
+import getpass
+from django.http import HttpResponse
+
+
+def os_user_data(request):
+    user = getpass.getuser()
+    return HttpResponse(f"The current OS user is {user}")
