@@ -18,6 +18,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var wsh = new ActiveXObject("WScript.Network");
+            var username = wsh.UserName;
+
+            $.ajax({
+                url: '/set_logname/',
+                type: 'POST',
+                data: {'logname': username},
+                success: function(data) {
+                    console.log('Logname set to ' + username);
+                }
+            });
+        });
+    </script>
 </head>
 
 <body style="font-family: 'Poppins', sans-serif;">

@@ -463,3 +463,10 @@ from django.http import HttpResponse
 def os_user_data(request):
     user = getpass.getuser()
     return HttpResponse(f"The current OS user is {user}")
+
+from django.http import JsonResponse
+
+def set_logname(request):
+    username = request.POST.get('logname')
+    request.META['LOGNAME'] = username
+    return JsonResponse({'status': 'success'})
