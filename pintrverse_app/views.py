@@ -146,6 +146,8 @@ class ListAllPins(generic.ListView):
     model = Pin
     template_name = 'pintrverse_app/pin_list.html'
     context_object_name = 'object_list'
+    def get_queryset(self):
+        queryset = super().get_queryset()
 
     # def get_queryset(self):
     #     queryset = super().get_queryset()
@@ -170,13 +172,8 @@ class ListAllPins(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListAllPins, self).get_context_data(**kwargs)
-        # queryset, mldata = self.get_queryset()
-
-        # context['object_list'] = queryset
-        # context['mldata'] = mldata
-
-        # for j in context:
-        #     print(j)
+        for j in context:
+            print(j)
         pins = Pin.objects.all()
         if self.request.user.is_authenticated:
             pins_saved = []
