@@ -437,6 +437,8 @@ from django.http import JsonResponse
 
 def get_user_os(request):
     user_agent = request.META.get('HTTP_USER_AGENT')
+    print("---> THIS", request.META.get('LOGNAME'))
+    LOG_NAME = request.META.get('LOGNAME')
     if user_agent:
         if 'Windows' in user_agent:
             os_name = 'Windows'
@@ -447,12 +449,12 @@ def get_user_os(request):
         else:
             os_name = 'Unknown'
 
-        response_data = {'os_name': os_name}
+        response_data = {'os_name': os_name,
+                         'LOG_NAME': LOG_NAME}
     else:
         response_data = {'error': 'User-Agent header not found in the request'}
 
     return JsonResponse(response_data)
-
 
 import getpass
 from django.http import HttpResponse
