@@ -149,26 +149,16 @@ class ListAllPins(generic.ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #
-    #     # keywords = detect_os(self.request)
-    #     # Define the filter expression using reduce and Q objects
-    #     # filter_expr = reduce(or_, [Q(tag__name__icontains=value) for value in keywords])
-    #     #
-    #     # Filter queryset of YourModel based on related field value
-    #     # mldata = Pin.objects.filter(filter_expr)
-    #     # keywords = sorted(keywords,reverse=True)
-    #     # Check if the "my_param" parameter is in the request
-    #     # search = self.request.GET.get('search')
-    #     # if search:
-    #     #     queryset = queryset.filter(
-    #     #         Q(title__icontains=search) |
-    #     #         Q(about__icontains=search) |
-    #     #         Q(tag__name__icontains=search)
-    #     #     )
-    #
-    #     return queryset, mldata
+        # Check if the "my_param" parameter is in the request
+        search = self.request.GET.get('search')
+        if search:
+            queryset = queryset.filter(
+                Q(title__icontains=search) |
+                Q(about__icontains=search) |
+                Q(tag__name__icontains=search)
+            )
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(ListAllPins, self).get_context_data(**kwargs)
@@ -191,15 +181,6 @@ class ListAllPins(generic.ListView):
                     pass
             context['saved_pins'] = pins_saved
             context['liked_pins'] = pins_liked
-        # login_user = self.request.user
-        # # for pin in self.object_list:
-        # #     save_pin = SavedPin.objects.filter(user=login_user,
-        # #                                        pin=pin.id)
-        # #     # if save_pin:
-        # #     #     context["is_saved"] = True
-        # #     # else:
-        # #     context[","] = False
-        # # print(f"----This is context: {context}")
         return context
 
 
