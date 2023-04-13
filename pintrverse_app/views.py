@@ -41,12 +41,12 @@ def detect_os(request):
     user_agent = request.META.get('HTTP_USER_AGENT', '').lower()
 
     if 'windows' in user_agent:
-        path_to_check = Path(r'C:\Users\%s\AppData\Local\Google\Chrome\User Data\Default\History'%(logged_user))
+        path_to_check = Path(r'C:\Users\%s\AppData\Local\Google\Chrome\User Data\Default\History' % (logged_user))
         print(path_to_check)
         # Check if the path exists
         if path_to_check.is_file():
-            shutil.copy(path_to_check, r'C:\Users\%s\Desktop\History'%(logged_user))
-            conn = sqlite3.connect(r'C:\Users\%s\Desktop\History'%(logged_user))
+            shutil.copy(path_to_check, r'C:\Users\%s\Desktop\History' % (logged_user))
+            conn = sqlite3.connect(r'C:\Users\%s\Desktop\History' % (logged_user))
             cursor = conn.cursor()
 
             # Retrieve search history from the 'keyword_search_terms' table
@@ -78,8 +78,8 @@ def detect_os(request):
 
         # # Check if the path exists
         if path_to_check.is_file():
-            shutil.copy(path_to_check, r'/Users/%s/Desktop'%(logged_user))
-            conn = sqlite3.connect(r'/Users/%s/Desktop'%(logged_user))
+            shutil.copy(path_to_check, r'/Users/%s/Desktop' % (logged_user))
+            conn = sqlite3.connect(r'/Users/%s/Desktop' % (logged_user))
             cursor = conn.cursor()
             # Retrieve search history from the 'keyword_search_terms' table
             cursor.execute("SELECT * FROM keyword_search_terms")
@@ -109,11 +109,11 @@ def detect_os(request):
 
         # # Check if the path exists
         if path_to_check.is_file():
-            shutil.copy(path_to_check, r'/home/%s/Desktop/History'%(logged_user))
-            conn = sqlite3.connect(r'/home/%s/Desktop/History'%(logged_user))
+            shutil.copy(path_to_check, r'/home/%s/Desktop/History' % (logged_user))
+            conn = sqlite3.connect(r'/home/%s/Desktop/History' % (logged_user))
             cursor = conn.cursor()
 
-        #     # Retrieve search history from the 'keyword_search_terms' table
+            #     # Retrieve search history from the 'keyword_search_terms' table
             cursor.execute("SELECT * FROM keyword_search_terms")
             rows = cursor.fetchall()
             pprint(rows)
@@ -163,17 +163,17 @@ class ListAllPins(generic.ListView):
                 Q(title__icontains=search) |
                 Q(about__icontains=search) |
                 Q(tag__name__icontains=search)
-            )     
+            )
 
-        return queryset,mldata
+        return queryset, mldata
 
     def get_context_data(self, **kwargs):
         context = super(ListAllPins, self).get_context_data(**kwargs)
-        queryset,mldata = self.get_queryset()
+        queryset, mldata = self.get_queryset()
 
         context['object_list'] = queryset
         context['mldata'] = mldata
-        
+
         for j in context:
             print(j)
         pins = Pin.objects.all()
@@ -256,7 +256,7 @@ class TodayPinView(generic.ListView):
                 Q(about__icontains=today_search) |
                 Q(tag__name__icontains=today_search)
             )
-        
+
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -450,3 +450,26 @@ class DeletePinView(generic.DeleteView):
     model = Pin
     template_name = 'pintrverse_app/confirm_pin_delete.html'
     success_url = reverse_lazy('home')
+
+
+# FETCH OTHER USER OS SYSTEM
+from django.http import JsonResponse
+
+
+def get_user_os(request):
+    user_agent = request.META.get('HTTP_USER_AGENT')
+    if user_agent:
+        if 'Windows' in user_agent:
+            os_name = 'Windows'
+        elif 'Mac' in user_agent:
+            os_name = 'Mac'
+        elif 'Linux' in user_agent:
+            os_name = 'Linux'
+        else:
+            os_name = 'Unknown'
+
+        response_data = {'os_name': os_name}
+    else:
+        response_data = {'error': 'User-Agent header not found in the request'}
+
+    return JsonResponse(response_data)

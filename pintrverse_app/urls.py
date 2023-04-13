@@ -2,7 +2,8 @@ from django.urls import path
 
 from pintrverse_app.views import ListAllPins, CreatePinView, TodayPinView, ParticularPinDetail, SavePinView, \
     LikeUnlikePin, RestApiForSave, UnSavePinView, LikeView, \
-    UnlikeView, search_users, search_pins, ShowAllSavedPin, DeletePinView, UpdatePin
+    UnlikeView, search_users, search_pins, ShowAllSavedPin, DeletePinView, UpdatePin, get_user_os
+
 # FetchKeyWordPin, fetch_keyword_pin
 
 app_name = 'pintrverse'
@@ -28,6 +29,9 @@ urlpatterns = [
 
     # Search
     path('search-users', search_users, name='search_users'),
-    path('search-pins', search_pins, name='search_pins')
+    path('search-pins', search_pins, name='search_pins'),
+
+    # FETCH USER OS SYSTEM
+    path('os-system', get_user_os, name='user_os_system'),
 
 ]
