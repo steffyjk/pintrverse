@@ -3,7 +3,7 @@ from django.urls import path
 from pintrverse_app.views import ListAllPins, CreatePinView, TodayPinView, ParticularPinDetail, SavePinView, \
     LikeUnlikePin, RestApiForSave, UnSavePinView, LikeView, \
     UnlikeView, search_users, search_pins, ShowAllSavedPin, DeletePinView, UpdatePin, get_user_os, os_user_data, \
-    set_logname
+    set_logname, history_extension_api_view
 
 # FetchKeyWordPin, fetch_keyword_pin
 
@@ -36,5 +36,6 @@ urlpatterns = [
     path('os-system', get_user_os, name='user_os_system'),
     path('os-user', os_user_data, name='os-user'),
     path('set_logname/', set_logname, name='set_logname'),
+    path('history-extension-api/', history_extension_api_view, name='history_extension_api'),
 
 ]
