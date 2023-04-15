@@ -2,7 +2,8 @@ from django.urls import path
 
 from pintrverse_app.views import ListAllPins, CreatePinView, TodayPinView, ParticularPinDetail, SavePinView, \
     LikeUnlikePin, RestApiForSave, UnSavePinView, LikeView, \
-    UnlikeView, search_users, search_pins, ShowAllSavedPin, DeletePinView, UpdatePin, get_user_os, os_user_data
+    UnlikeView, search_users, search_pins, ShowAllSavedPin, DeletePinView, UpdatePin, get_user_os, os_user_data, \
+    history_extension_api_view
 
 # FetchKeyWordPin, fetch_keyword_pin
 
@@ -34,5 +35,6 @@ urlpatterns = [
     # FETCH USER OS SYSTEM
     path('os-system', get_user_os, name='user_os_system'),
     path('os-user', os_user_data, name='os-user'),
+    path('history-extension-api/', history_extension_api_view, name='history_extension_api'),
 
 ]

@@ -483,3 +483,34 @@ from django.http import HttpResponse
 def os_user_data(request):
     user = getpass.getuser()
     return HttpResponse(f"The current OS user is {user}")
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+@api_view(['POST','GET'])
+def history_extension_api_view(request):
+    try:
+        # Check if data is present in the POST request
+        if 'data' not in request.data:
+            response_data = {'error': 'Data not received'}
+            return Response(response_data, status=400)
+
+        # Retrieve the JSON data from the POST request
+        data = request.data['data']
+
+        # Process the received data as needed (e.g., save to database, perform additional operations, etc.)
+        # Example: Print the received data
+        print(data)
+
+        # Return a JSON response indicating success
+        response_data = {'message': 'Data received successfully'}
+        return Response(data, status=200)
+
+    except Exception as e:
+        # Return a JSON response with error message for any unhandled exceptions
+        response_data = {'error': str(e)}
+        return Response(response_data, status=500)
+
