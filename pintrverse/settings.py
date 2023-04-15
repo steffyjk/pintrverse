@@ -90,6 +90,7 @@ WSGI_APPLICATION = 'pintrverse.wsgi.application'
 # Database [ CUSTOM POSTGRES ]
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+CORS_ORIGIN_ALLOW_ALL = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
