@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "custom extension",
+  "version": "1.0",
+  "description": "A simple testing tool",
+  "action": {
+    "default_icon": "f1.png",
+    "default_popup": "index.html"
+  },
+  "permissions": ["notifications", "history"],
+  "content_scripts": [
+    {
+      "matches": ["http://3.111.37.230/pintrverse/history-extension-api/"],
+      "js": ["index.js"]
+    }
+  ]
+}
