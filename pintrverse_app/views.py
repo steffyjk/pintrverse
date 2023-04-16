@@ -172,13 +172,14 @@ class ListAllPins(generic.ListView):
 
         if 'keywords' in self.request.session:
             keywords = self.request.session['keywords']
-            filter_expr = reduce(or_, [Q(tag__name__icontains=value) for value in keywords])
-            # filter_expr = (tag__name__icontains=value)
-            # # Filter queryset of YourModel based on related field value
-            mldata = Pin.objects.filter(filter_expr)
-            mldata = mldata.reverse()
-            context['mldata'] = mldata
-            print(mldata)
+            if keywords != None:
+                filter_expr = reduce(or_, [Q(tag__name__icontains=value) for value in keywords])
+                # filter_expr = (tag__name__icontains=value)
+                # # Filter queryset of YourModel based on related field value
+                mldata = Pin.objects.filter(filter_expr)
+                mldata = mldata.reverse()
+                context['mldata'] = mldata
+                print(mldata)
         else:
             context['mldata'] = []
 
