@@ -182,7 +182,7 @@ class ListAllPins(generic.ListView):
                     context['mldata'] = mldata
                     print(mldata)
                 except:
-                    pass
+                    context['mldata'] = []
         else:
             context['mldata'] = []
 
