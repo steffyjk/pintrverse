@@ -166,6 +166,22 @@ class ListAllPins(generic.ListView):
         for j in context:
             print(j)
         pins = Pin.objects.all()
+        print("---")
+        print(self.request.session)
+        # keywords = sorted(keywords,reverse=True)
+
+        if 'keywords' in self.request.session:
+            keywords = self.request.session['keywords']
+            filter_expr = reduce(or_, [Q(tag__name__icontains=value) for value in keywords])
+            # filter_expr = (tag__name__icontains=value)
+            # # Filter queryset of YourModel based on related field value
+            mldata = Pin.objects.filter(filter_expr)
+            mldata = mldata.reverse()
+            context['mldata'] = mldata
+            print(mldata)
+        else:
+            context['mldata'] = []
+
         if self.request.user.is_authenticated:
             pins_saved = []
             pins_liked = []
@@ -484,6 +500,16 @@ def set_logname(request):
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
+import re
+
+def iterate_words_excluding_special_characters(string):
+    # Split the string into words using space as delimiter
+    words = string.split()
+    # Define regex pattern to match special characters
+    pattern = r'[^a-zA-Z0-9]'
+    # Iterate over the words and filter out words containing special characters
+    filtered_words = [word for word in words if not re.search(pattern, word)]
+    return filtered_words
 
 @csrf_exempt
 @api_view(['POST','GET'])
@@ -496,14 +522,28 @@ def history_extension_api_view(request):
 
         # Retrieve the JSON data from the POST request
         data = request.data['data']
+        sdata = data[:50]
+        keywords = []
+        for data in sdata:
+            title = data['title']
+            pattern = r'\(.*?\)'
+            # Use re.sub to replace the matches with an empty string
+            result = re.sub(pattern, '', title)
+            if result not in keywords:
+                words = iterate_words_excluding_special_characters(result)
+                for word in words:
+                    print(word)
+                    if word not in keywords:
+                        keywords.append(word)
 
+        request.session['keywords'] = keywords
         # Process the received data as needed (e.g., save to database, perform additional operations, etc.)
         # Example: Print the received data
-        print(data)
+        # print(data)
 
         # Return a JSON response indicating success
         response_data = {'message': 'Data received successfully'}
-        return Response(data, status=200)
+        return Response(response_data, status=200)
 
     except Exception as e:
         # Return a JSON response with error message for any unhandled exceptions
