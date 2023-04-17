@@ -34,7 +34,6 @@ from django.db.models.functions import Lower
 # Retrieve the login name of the current user
 def get_current_user():
     user = os.getlogin()
-    print("Current logged-in user:", user)
     return user
 
 
@@ -44,7 +43,6 @@ def detect_os(request):
 
     if 'windows' in user_agent:
         path_to_check = Path(r'C:\Users\%s\AppData\Local\Google\Chrome\User Data\Default\History' % (logged_user))
-        print(path_to_check)
         # Check if the path exists
         if path_to_check.is_file():
             shutil.copy(path_to_check, r'C:\Users\%s\Desktop\History' % (logged_user))
@@ -54,7 +52,7 @@ def detect_os(request):
             # Retrieve search history from the 'keyword_search_terms' table
             cursor.execute("SELECT * FROM keyword_search_terms")
             rows = cursor.fetchall()
-            pprint(rows)
+            # pprint(rows)
 
             # Close the database connection
             # j
@@ -86,7 +84,7 @@ def detect_os(request):
             # Retrieve search history from the 'keyword_search_terms' table
             cursor.execute("SELECT * FROM keyword_search_terms")
             rows = cursor.fetchall()
-            pprint(rows)
+            # pprint(rows)
             # # Close the database connection
             # cursor.close()
             # conn.close()
@@ -163,11 +161,11 @@ class ListAllPins(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListAllPins, self).get_context_data(**kwargs)
-        for j in context:
-            print(j)
+        # for j in context:
+        #     print(j)
         pins = Pin.objects.all()
-        print("---")
-        print(self.request.session)
+        # print("---")
+        # print(self.request.session)
         # keywords = sorted(keywords,reverse=True)
 
         if 'keywords' in self.request.session:
@@ -180,7 +178,7 @@ class ListAllPins(generic.ListView):
                     mldata = Pin.objects.filter(filter_expr)
                     mldata = mldata.reverse()
                     context['mldata'] = mldata
-                    print(mldata)
+                    # print(mldata)
                 except:
                     context['mldata'] = []
         else:
@@ -289,9 +287,6 @@ class ParticularPinDetail(generic.DetailView):
     slug_url_kwarg = 'pin_id'
     slug_field = 'id'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(ParticularPinDetail,self).get_context_data(**kwargs)
-    #     print(context['pin'].tag)
 
 
 class SavePinView(generic.View):
@@ -380,7 +375,8 @@ class ShowAllSavedPin(generic.ListView):
         return queryset
 
 
-#
+# THIS IS OLD CODE BASE FOR FETCHING USER HISTORY
+
 # # # FUNCTIONAL BASED FETCH PIN FROM USER's history's keyword
 # def fetch_keyword_pin(request):
 #     keywords = extract_keywords(get_history_list(5))
@@ -458,7 +454,7 @@ from django.http import JsonResponse
 
 def get_user_os(request):
     user_agent = request.META.get('HTTP_USER_AGENT')
-    print("---> THIS", request.META.get('LOGNAME'))
+    # print("---> THIS", request.META.get('LOGNAME'))
     LOG_NAME = request.META.get('LOGNAME')
     if user_agent:
         if 'Windows' in user_agent:
@@ -477,6 +473,8 @@ def get_user_os(request):
 
     return JsonResponse(response_data)
 
+
+# THIS GONNA FETCH LOCAL_MACHIN'S LOGIN USER NAME [ NO NEED IN SERVER LEVEL ]
 import getpass
 from django.http import HttpResponse
 
@@ -485,6 +483,8 @@ def os_user_data(request):
     user = getpass.getuser()
     return HttpResponse(f"The current OS user is {user}")
 
+
+# IF WE CAN SET THE LOGNAME TO THE SPECIFIC LOGIN USER [ NO NEED ]
 from django.http import JsonResponse
 
 def set_logname(request):
@@ -500,6 +500,9 @@ def set_logname(request):
                          'REQUEST':json.dumps(meta_dict)})
 
 
+# CUSTOM CHROME EXTENSION CONFIGURATION
+# FOLLOWING FUNCTION CAN FETCH KEYWORDS FROM SESSION['KEYWORDS'] WHICH IS SET BY USER BROWSER HISTORY
+#   WHICH INCLUDES THE USAGE OF CUSTOM CHROME EXTENSION API
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -526,26 +529,28 @@ def history_extension_api_view(request):
 
         # Retrieve the JSON data from the POST request
         data = request.data['data']
-        sdata = data[:50]
+        sdata = data[:50] # FETCH FIRST 50 HISTORY DATA
         keywords = []
         for data in sdata:
-            title = data['title']
+            title = data['title'] # TAKE USER SEARCH TITLES ONLY
             pattern = r'\(.*?\)'
             # Use re.sub to replace the matches with an empty string
             result = re.sub(pattern, '', title)
-            if result not in keywords:
+            if result not in keywords: # FOR CUTTING OFF THE DUPLICATION IN KEYWORD LIST
                 words = iterate_words_excluding_special_characters(result)
                 for word in words:
-                    print(word)
+                    # print(word)
                     if word not in keywords:
                         keywords.append(word)
 
+        # ADD KEYWORD HISTORY FETCHED LIST IN SESSION SO WE CAM USE FURTHER
         request.session['keywords'] = keywords
+
         # Process the received data as needed (e.g., save to database, perform additional operations, etc.)
         # Example: Print the received data
         # print(data)
 
-        # Return a JSON response indicating success
+        # Return a JSON response indicating success IN CUSTOM EXTENSION
         response_data = {'message': 'Data received successfully'}
         return Response(response_data, status=200)
 
