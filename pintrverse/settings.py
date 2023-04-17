@@ -181,3 +181,9 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+
+# FOR SPECIFIC CHROM EXTENSION
+CORS_ORIGIN_WHITELIST = [
+    'chrome-extension://gamgocmcliopdiepcehdimcffcnlbaon',
+]
